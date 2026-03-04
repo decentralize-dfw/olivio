@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olivio & Co — Full Audit Report</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f4f4f0; color: #1a1a1a; line-height: 1.65; }
+.cover { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%); color: white; padding: 80px 60px; min-height: 220px; }
+.cover h1 { font-size: 2.4em; font-weight: 800; letter-spacing: -0.5px; }
+.cover .sub { font-size: 1em; opacity: 0.65; margin-top: 10px; }
+.cover .badges { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+.badge { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); padding: 5px 14px; border-radius: 20px; font-size: 0.8em; font-weight: 600; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+.toc { background: white; border-radius: 12px; padding: 32px 36px; margin: 36px 0 32px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.toc h2 { font-size: 1em; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 20px; }
+.toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 32px; }
+.toc a { color: #1a1a2e; text-decoration: none; font-size: 0.9em; padding: 4px 0; border-bottom: 1px solid #f0f0f0; display: block; }
+.toc a:hover { color: #e25a1c; }
+
+/* SECTION HEADERS */
+.section { background: white; border-radius: 12px; margin-bottom: 28px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.section-header { padding: 28px 36px 20px; border-bottom: 2px solid #f0f0f0; display: flex; align-items: flex-start; gap: 18px; }
+.section-num { background: #1a1a2e; color: white; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1em; flex-shrink: 0; }
+.section-title h2 { font-size: 1.3em; color: #1a1a2e; }
+.section-title p { font-size: 0.85em; color: #888; margin-top: 4px; }
+.section-body { padding: 28px 36px; }
+
+/* SCORE BAR */
+.score-row { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
+.score-label { font-size: 0.82em; font-weight: 600; color: #555; width: 160px; flex-shrink: 0; }
+.score-bar-wrap { flex: 1; background: #f0f0f0; border-radius: 6px; height: 12px; overflow: hidden; }
+.score-bar-fill { height: 100%; border-radius: 6px; transition: width 0.3s; }
+.score-val { font-weight: 800; font-size: 0.95em; width: 36px; text-align: right; }
+.red { background: #e74c3c; }
+.orange { background: #f39c12; }
+.yellow { background: #f1c40f; }
+.lime { background: #2ecc71; }
+.green { background: #27ae60; }
+
+/* COMPARISON TABLE */
+.comp-table { width: 100%; border-collapse: collapse; font-size: 0.88em; margin: 16px 0; }
+.comp-table th { padding: 11px 14px; text-align: left; font-weight: 700; font-size: 0.8em; text-transform: uppercase; letter-spacing: 0.5px; }
+.comp-table th:nth-child(1) { background: #f7f7f7; color: #888; width: 28%; }
+.comp-table th:nth-child(2) { background: #fff3f0; color: #c0392b; width: 24%; }
+.comp-table th:nth-child(3) { background: #f0fff5; color: #27ae60; width: 24%; }
+.comp-table th:nth-child(4) { background: #f0f4ff; color: #2c3e8c; width: 24%; }
+.comp-table td { padding: 11px 14px; border-bottom: 1px solid #f3f3f3; vertical-align: top; }
+.comp-table tr:last-child td { border-bottom: none; }
+.comp-table td:nth-child(1) { font-weight: 600; color: #444; }
+.comp-table tr:hover td { background: #fafafa; }
+
+/* STATUS CHIPS */
+.chip { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 12px; font-size: 0.78em; font-weight: 700; }
+.chip-red { background: #fde8e8; color: #c0392b; }
+.chip-orange { background: #fef0dc; color: #d35400; }
+.chip-green { background: #e3f9ee; color: #1a7a43; }
+.chip-blue { background: #e8f0fe; color: #1a3a8c; }
+.chip-grey { background: #f0f0f0; color: #666; }
+
+/* ROADMAP */
+.roadmap-phase { border-left: 4px solid; padding-left: 24px; margin-bottom: 36px; }
+.phase-red { border-color: #e74c3c; }
+.phase-orange { border-color: #f39c12; }
+.phase-green { border-color: #27ae60; }
+.phase-title { font-size: 1.1em; font-weight: 800; margin-bottom: 6px; }
+.phase-sub { font-size: 0.82em; color: #888; margin-bottom: 20px; }
+.task-card { background: #fafafa; border: 1px solid #ececec; border-radius: 10px; padding: 18px 22px; margin-bottom: 12px; }
+.task-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.task-title { font-weight: 700; font-size: 0.95em; color: #1a1a2e; }
+.task-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+.task-impact { font-size: 0.75em; font-weight: 700; padding: 2px 9px; border-radius: 8px; }
+.impact-critical { background: #fde8e8; color: #c0392b; }
+.impact-high { background: #fef0dc; color: #d35400; }
+.impact-medium { background: #fef9e7; color: #b7950b; }
+.task-body { font-size: 0.85em; color: #555; line-height: 1.6; }
+.task-body ul { padding-left: 18px; margin-top: 8px; }
+.task-body li { margin-bottom: 5px; }
+.task-tools { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+.tool-tag { background: #1a1a2e; color: white; font-size: 0.73em; padding: 2px 8px; border-radius: 5px; }
+
+/* SCORECARD FINAL */
+.final-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 20px; }
+.final-card { background: white; border-radius: 10px; padding: 20px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.final-card .now { font-size: 2em; font-weight: 900; color: #e74c3c; }
+.final-card .new { font-size: 2em; font-weight: 900; color: #27ae60; }
+.final-card .target { font-size: 2em; font-weight: 900; color: #1a1a2e; }
+.final-card .arrow { color: #aaa; font-size: 1.2em; }
+.final-card .lbl { font-size: 0.75em; color: #aaa; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* CALLOUT */
+.callout { border-radius: 10px; padding: 18px 22px; margin: 16px 0; font-size: 0.88em; line-height: 1.65; }
+.callout-red { background: #fde8e8; border-left: 4px solid #e74c3c; }
+.callout-green { background: #e3f9ee; border-left: 4px solid #27ae60; }
+.callout-orange { background: #fef0dc; border-left: 4px solid #f39c12; }
+.callout-blue { background: #e8f0fe; border-left: 4px solid #2c3e8c; }
+.callout strong { font-weight: 700; }
+
+/* DETAIL LIST */
+.detail-list { list-style: none; padding: 0; }
+.detail-list li { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid #f3f3f3; font-size: 0.87em; }
+.detail-list li:last-child { border-bottom: none; }
+.detail-list .icon { flex-shrink: 0; width: 20px; text-align: center; }
+
+h3 { font-size: 1em; font-weight: 700; color: #1a1a2e; margin: 20px 0 10px; }
+h4 { font-size: 0.88em; font-weight: 700; color: #555; margin: 16px 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+p { font-size: 0.88em; color: #444; margin-bottom: 10px; line-height: 1.7; }
+hr { border: none; border-top: 1px solid #ececec; margin: 24px 0; }
+
+@media (max-width: 768px) {
+  .cover { padding: 48px 24px; }
+  .section-body, .section-header { padding: 20px 20px; }
+  .toc-grid, .final-grid { grid-template-columns: 1fr; }
+  .comp-table { font-size: 0.78em; }
+}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>OLIVIO & CO — Full Website Audit</h1>
+  <div class="sub">Existing site vs. New Design · Evidence-based · Scored 1–10 · Roadmap to 10/10</div>
+  <div class="badges">
+    <span class="badge">March 2026</span>
+    <span class="badge">olivioandco.com → olivioandco.eu</span>
+    <span class="badge">12 Audit Dimensions</span>
+    <span class="badge">3-Phase Roadmap</span>
+    <span class="badge">Shopify</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- TOC -->
+<div class="toc">
+  <h2>Contents</h2>
+  <div class="toc-grid">
+    <a href="#s1">01 · Brand Positioning & Value Proposition</a>
+    <a href="#s7">07 · Conversion Optimization & CRO</a>
+    <a href="#s2">02 · Navigation & Site Architecture</a>
+    <a href="#s8">08 · Customer Experience & Support</a>
+    <a href="#s3">03 · Homepage Effectiveness</a>
+    <a href="#s9">09 · Social Media & Community</a>
+    <a href="#s4">04 · Product Pages & Catalog UX</a>
+    <a href="#s10">10 · Sustainability Communication</a>
+    <a href="#s5">05 · Trust & Social Proof</a>
+    <a href="#s11">11 · B2B & Wholesale</a>
+    <a href="#s6">06 · SEO & Content</a>
+    <a href="#s12">12 · Overall Scorecard</a>
+    <a href="#roadmap">→ Roadmap to 10/10</a>
+    <a href="#summary">→ Executive Summary</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 1 — BRAND POSITIONING
+═══════════════════════════════════════════════════ -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <div class="section-num">01</div>
+    <div class="section-title">
+      <h2>Brand Positioning & Value Proposition</h2>
+      <p>How clearly the brand communicates who it is, what it offers, and why it wins</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="score-row">
+      <span class="score-label">Existing Site</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill orange" style="width:70%"></div></div>
+      <span class="score-val" style="color:#f39c12">7.0</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">New Design</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill lime" style="width:90%"></div></div>
+      <span class="score-val" style="color:#2ecc71">9.0</span>
+    </div>
+
+    <table class="comp-table">
+      <tr>
+        <th>Dimension</th>
+        <th>❌ Existing Site</th>
+        <th>✅ New Design</th>
+        <th>🎯 10/10 Target</th>
+      </tr>
+      <tr>
+        <td>Above-fold headline</td>
+        <td>Collection name only ("Art of Breakfast"), no brand statement</td>
+        <td>"Buy Kids Sunglasses Online — UV400 Protection from Baby to Teen" — keyword-rich, parent-focused</td>
+        <td>A/B test headline variants. Add emotional hook: "Because their eyes see more UV than yours."</td>
+      </tr>
+      <tr>
+        <td>USP communication</td>
+        <td>Hidden across multiple pages, never stated directly</td>
+        <td>5 trust badges in hero row: UV400, Free Shipping, 3× Award-Winning, EU Brand, BPA-Free</td>
+        <td>Add 6th badge: "6 Age Categories — Most Precise Fit in the Market"</td>
+      </tr>
+      <tr>
+        <td>Competitor differentiation</td>
+        <td>Zero. No mention of what makes it different vs Babiators/Roshambo</td>
+        <td>Explicit: "Neither Babiators nor Roshambo offers ski goggles." "6 vs 3/5 age categories." Trust signals competitors can't match.</td>
+        <td>Add a dedicated comparison page or section (structured data-friendly)</td>
+      </tr>
+      <tr>
+        <td>Award credentials</td>
+        <td>About Us page only, zero homepage visibility</td>
+        <td>Homepage section + footer strip + About page with all 7 awards detailed</td>
+        <td>Add award badge imagery (actual Red Dot/iF logos) + product page integration</td>
+      </tr>
+      <tr>
+        <td>Brand story</td>
+        <td>Generic "Mediterranean inspiration" — no narrative</td>
+        <td>"A small path. Olive trees. The sea." — founder journey, named collections, cultural identity</td>
+        <td>Add founder photo/video. Quote with attribution. Embed short video on About page.</td>
+      </tr>
+      <tr>
+        <td>Collection identity</td>
+        <td>Collection names exist but no story context around them</td>
+        <td>Each collection described as "named stories" — Matisse reference for Creative Edition D, etc.</td>
+        <td>Each collection page should have a 2–3 sentence art/inspiration story at top</td>
+      </tr>
+    </table>
+
+    <div class="callout callout-green">
+      <strong>Key Win:</strong> The new design introduces competitive benchmarking (Babiators, Roshambo) that transforms Olivio & Co from a brand asking to be trusted into a brand that proves it should be chosen. This is a significant strategic improvement.
+    </div>
+    <div class="callout callout-orange">
+      <strong>Remaining Gap (−1.0):</strong> No visual brand assets for the awards — the logos (Red Dot red circle, iF white circle) are globally recognised trust signals when shown as images. Currently they appear as text only. Getting permission to display the official badge imagery would take this to 10/10.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 2 — NAVIGATION
+═══════════════════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="section-header">
+    <div class="section-num">02</div>
+    <div class="section-title">
+      <h2>Navigation & Site Architecture</h2>
+      <p>How easily users find what they need; structural clarity; zero dead ends</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="score-row">
+      <span class="score-label">Existing Site</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill red" style="width:55%"></div></div>
+      <span class="score-val" style="color:#e74c3c">5.5</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">New Design</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill lime" style="width:75%"></div></div>
+      <span class="score-val" style="color:#2ecc71">7.5</span>
+    </div>
+
+    <table class="comp-table">
+      <tr>
+        <th>Issue</th>
+        <th>❌ Existing Site</th>
+        <th>✅ New Design</th>
+        <th>🎯 10/10 Target</th>
+      </tr>
+      <tr>
+        <td>Country selector modal</td>
+        <td>Full-screen blocker on EVERY page load, before any content is visible</td>
+        <td>Appears only on the Shop page (grid5.html), dismissible, combined with email incentive (10% off)</td>
+        <td>Use Shopify Markets geo-IP detection. Auto-route, show only a dismissible banner: "Looks like you're in [Country] → Shop EU Store"</td>
+      </tr>
+      <tr>
+        <td>Search functionality</td>
+        <td>Shows "Something went wrong. Please try again!" error on page load — broken</td>
+        <td>Search removed from navigation entirely — no broken element</td>
+        <td>Reintroduce search as a keyboard-triggered overlay (⌘K / Ctrl+K) with predictive results. Shopify Search & Discovery app.</td>
+      </tr>
+      <tr>
+        <td>Navigation complexity</td>
+        <td>Mega-menu: Shop by Age (5) + Shop by Collection (8) + Shop by Style (4) = 17 sub-items in one category alone</td>
+        <td>Minimal: Sunglasses / About / Blog — 3 items. Clean.</td>
+        <td>After Shopify connection: expand to 5 nav items with slim dropdowns. Add "Screen Glasses" and "Ski Goggles" as top-level items given their differentiation value.</td>
+      </tr>
+      <tr>
+        <td>URL structure</td>
+        <td>Typos in slugs: /sungalsses-oval, /sungalsses-round (2 broken URLs indexable by Google)</td>
+        <td>New URL scheme: /grid5.html?age=baby etc. Clean, no typos.</td>
+        <td>Migrate to semantic Shopify URLs: /collections/baby-sunglasses, /blogs/guide/why-kids-need-sunglasses. Set 301 redirects from all old URLs.</td>
+      </tr>
+      <tr>
+        <td>Breadcrumbs</td>
+        <td>Not confirmed on collection or product pages</td>
+        <td>Home › About / Home › Blog confirmed via breadcrumb markup</td>
+        <td>Add breadcrumbs to all product pages: Home › Sunglasses › Kids 3–6y › [Product Name]. Required for Google rich results.</td>
+      </tr>
+      <tr>
+        <td>Footer navigation</td>
+        <td>Basic links, no structure</td>
+        <td>4-column footer: Shop / Age Categories / Company / Contact — complete and scannable</td>
+        <td>Add 5th column: Blog / Guides (UV Guide, Size Guide, Ski Guide, Screen Guide). This creates internal linking and improves crawlability.</td>
+      </tr>
+    </table>
+
+    <div class="callout callout-orange">
+      <strong>Remaining Gap (−2.5):</strong> With only 3 nav items, the new design prioritises simplicity over discoverability. Once Shopify is connected and all categories are live (sport sunglasses, ski goggles, screen glasses, accessories), the navigation needs a second pass to surface these without creating complexity.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 3 — HOMEPAGE
+═══════════════════════════════════════════════════ -->
+<div class="section" id="s3">
+  <div class="section-header">
+    <div class="section-num">03</div>
+    <div class="section-title">
+      <h2>Homepage Effectiveness</h2>
+      <p>Does the homepage convert a cold visitor into a confident shopper within 8 seconds?</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="score-row">
+      <span class="score-label">Existing Site</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill red" style="width:50%"></div></div>
+      <span class="score-val" style="color:#e74c3c">5.0</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">New Design</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill lime" style="width:85%"></div></div>
+      <span class="score-val" style="color:#2ecc71">8.5</span>
+    </div>
+
+    <table class="comp-table">
+      <tr>
+        <th>Element</th>
+        <th>❌ Existing Site</th>
+        <th>✅ New Design</th>
+        <th>🎯 10/10 Target</th>
+      </tr>
+      <tr>
+        <td>Above-fold clarity</td>
+        <td>Hero carousel with collection name only. Visitor cannot tell what the brand sells without scrolling.</td>
+        <td>H1 keyword headline + sub-description + 5 trust badges. All above fold on desktop.</td>
+        <td>Add one social proof line below CTA: "★★★★★ Trusted by 10,000+ families across Europe"</td>
+      </tr>
+      <tr>
+        <td>Size guide on homepage</td>
+        <td>Absent</td>
+        <td>Full 6-category size table with clickable age links — major conversion de-risker for parents</td>
+        <td>Keep. Add a "Measure Now" micro-interaction (cm input → auto-recommend category)</td>
+      </tr>
+      <tr>
+        <td>Blog previews</td>
+        <td>Absent</td>
+        <td>5 blog articles previewed with category labels, publication date (March 2026), and read links</td>
+        <td>Show 3 articles maximum with true thumbnail images. Add "New" badge to latest article.</td>
+      </tr>
+      <tr>
+        <td>Social proof / reviews</td>
+        <td>Zero</td>
+        <td>Zero — not present on homepage</td>
+        <td>CRITICAL: Add review carousel (minimum 6 reviews with 5★) immediately below hero. "What parents say" section.</td>
+      </tr>
+      <tr>
+        <td>Collection stories</td>
+        <td>Carousel with images only</td>
+        <td>Named collections listed (Classic, Coral Reef, etc.) with clickable links and context ("wearable stories")</td>
+        <td>Add collection thumbnails/images alongside names so users can visually browse before clicking</td>
+      </tr>
+      <tr>
+        <td>Email capture</td>
+        <td>Not visible on homepage</td>
+        <td>Not on homepage — only on shop page (grid5.html) as modal with 10% off incentive</td>
+        <td>Add inline email signup section on homepage: "Get 10% off your first order + UV eye health guide (free)"</td>
+      </tr>
+      <tr>
+        <td>FAQ section</td>
+        <td>Absent</td>
+        <td>Full FAQ section at bottom: 5 detailed Q&As covering UV, sizing, skiing, screen glasses, shipping</td>
+        <td>Add FAQ schema markup (JSON-LD) for Google featured snippet eligibility</td>
+      </tr>
+      <tr>
+        <td>Contact visibility</td>
+        <td>Hidden in header utility bar</td>
+        <td>Phone, email, physical address (Paris) visible in "Promise" section on homepage</td>
+        <td>Perfect. Keep. Add response time SLA: "We reply within 24h on business days."</td>
+      </tr>
+    </table>
+
+    <div class="callout callout-red">
+      <strong>Biggest Remaining Gap (−1.5):</strong> No customer reviews anywhere on the homepage. For a brand selling children's safety products (UV eye protection), parent-to-parent reviews are the most trusted form of validation. This is the single highest-leverage improvement remaining across the entire site.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 4 — PRODUCT PAGES
+═══════════════════════════════════════════════════ -->
+<div class="section" id="s4">
+  <div class="section-header">
+    <div class="section-num">04</div>
+    <div class="section-title">
+      <h2>Product Pages & Catalog UX</h2>
+      <p>Can a parent find, evaluate, and confidently add to cart the right product?</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="score-row">
+      <span class="score-label">Existing Site</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill orange" style="width:60%"></div></div>
+      <span class="score-val" style="color:#f39c12">6.0</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">New Design (grid5)</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill lime" style="width:82%"></div></div>
+      <span class="score-val" style="color:#2ecc71">8.2</span>
+    </div>
+
+    <table class="comp-table">
+      <tr>
+        <th>Feature</th>
+        <th>❌ Existing Site</th>
+        <th>✅ New Design (grid5.html)</th>
+        <th>🎯 10/10 Target</th>
+      </tr>
+      <tr>
+        <td>View modes</td>
+        <td>Grid only</td>
+        <td>4 modes: Grid / Sphere / Flat / Flow — genuinely innovative UX not seen on any competitor</td>
+        <td>Add keyboard shortcut hints (G=Grid, S=Sphere) for power users. Persist preference in localStorage.</td>
+      </tr>
+      <tr>
+        <td>Filter system</td>
+        <td>Navigation-based only (by age, collection, style)</td>
+        <td>Multi-dimensional: Age / Type (Sun, Sport, Ski, Screen, Acc) / Shape / Lens (Polar/Non-P) / Stock / Featured / Best Seller</td>
+        <td>Add Price Range filter and Colour filter. Add active filter chips showing what's applied with one-click removal.</td>
+      </tr>
+      <tr>
+        <td>Product card info</td>
+        <td>Image + name + price</td>
+        <td>Image + name + colours + lens info + Add to Cart + Buy Now (confirmed in modal)</td>
+        <td>Add star rating (x reviews) below product name. Add "Best Seller" / "New" / "Low Stock" badge overlays on card.</td>
+      </tr>
+      <tr>
+        <td>Quick-view / PDP modal</td>
+        <td>Standard Shopify PDP redirect</td>
+        <td>In-page modal with full product info, colours, size/fit, Add to Cart, Buy Now, "You may also like" section confirmed in code</td>
+        <td>Add reviews tab inside modal. Add "Fits age X–Xy" highlighted callout. Add social sharing button.</td>
+      </tr>
+      <tr>
+        <td>Size guide access</td>
+        <td>Not prominently linked from product pages</td>
+        <td>Full size guide accessible via modal on grid page — 6-category table with head measurements</td>
+        <td>Show size guide link directly inside product modal, next to age/size selector: "Not sure? See size guide →"</td>
+      </tr>
+      <tr>
+        <td>Cross-sell / upsell</td>
+        <td>Absent</td>
+        <td>"You may also like" section confirmed in product modal code</td>
+        <td>Implement algorithm-based recommendations (same age + different type: bought sunglasses → suggest screen glasses). Add accessories cross-sell.</td>
+      </tr>
+      <tr>
+        <td>Wishlist</td>
+        <td>Absent</td>
+        <td>Absent</td>
+        <td>Add heart icon (♡) on product cards. Connect to Shopify Swym Wishlist Plus. Allow share-wishlist URL for gift scenarios.</td>
+      </tr>
+      <tr>
+        <td>Customer reviews on PDP</td>
+        <td>Absent</td>
+        <td>Absent</td>
+        <td>Judge.me or Yotpo integration. Show star rating + review count on card thumbnail. Full reviews in PDP modal.</td>
+      </tr>
+    </table>
+
+    <div class="callout callout-green">
+      <strong>Outstanding Feature:</strong> The 4-view-mode catalog (Grid / Sphere / Flat / Flow) is genuinely unique in the children's eyewear market. This is a memorable interaction that differentiated shoppers will share and return to. Keep and invest in it.
+    </div>
+    <div class="callout callout-orange">
+      <strong>Gap (−1.8):</strong> The catalog is currently running on scraped data. Once Shopify is connected, ensure the filter parameters (?age=baby, ?type=ski) map to real Shopify collection handles so URLs are bookmarkable, shareable, and indexable by Google.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 5 — TRUST & SOCIAL PROOF
+═══════════════════════════════════════════════════ -->
+<div class="section" id="s5">
+  <div class="section-header">
+    <div class="section-num">05</div>
+    <div class="section-title">
+      <h2>Trust & Social Proof</h2>
+      <p>Does a first-time parent feel safe buying children's eyewear from this brand?</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="score-row">
+      <span class="score-label">Existing Site</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill red" style="width:40%"></div></div>
+      <span class="score-val" style="color:#e74c3c">4.0</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">New Design</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill orange" style="width:65%"></div></div>
+      <span class="score-val" style="color:#f39c12">6.5</span>
+    </div>
+
+    <table class="comp-table">
+      <tr>
+        <th>Trust Signal</th>
+        <th>❌ Existing Site</th>
+        <th>✅ New Design</th>
+        <th>🎯 10/10 Target</th>
+      </tr>
+      <tr>
+        <td>Customer reviews</td>
+        <td>Completely absent</td>
+        <td>Still absent — biggest remaining gap on entire site</td>
+        <td>Post-purchase automated email via Judge.me (Day 14 after delivery). Target 50+ reviews in first 3 months by emailing existing customers. Display on homepage + product pages.</td>
+      </tr>
+      <tr>
+        <td>Award badges</td>
+        <td>About Us page text only</td>
+        <td>Homepage section + About page full list + footer strip. All 7 awards named.</td>
+        <td>Obtain official badge imagery from Red Dot, iF Design, ADC. Display as recognisable logos. Add year + category text below each.</td>
+      </tr>
+      <tr>
+        <td>UV/safety certification</td>
+        <td>Mentioned in copy, no badge</td>
+        <td>Trust bar on grid page: "✓ 100% UV400 Protection" + "✓ BPA-Free Frames"</td>
+        <td>Display CE mark + UV400 standard reference (EN ISO 12312-1) on each product page. Link to a "Lens Safety" info page.</td>
+      </tr>
+      <tr>
+        <td>Physical address</td>
+        <td>Not visible on main pages</td>
+        <td>231 rue Saint-Honoré, Paris, France — homepage "Promise" section + footer</td>
+        <td>Perfect. Keep. Consider adding a Google Maps embed on Contact page.</td>
+      </tr>
+      <tr>
+        <td>Phone number</td>
+        <td>Not prominently displayed</td>
+        <td>+33 1 89 70 81 98 — homepage + footer + about</td>
+        <td>Perfect. Add business hours next to phone: "Mon–Fri 9:00–18:00 CET"</td>
+      </tr>
+      <tr>
+        <td>Press / media mentions</td>
+        <td>Absent</td>
+        <td>Absent</td>
+        <td>If any press coverage exists, add "As Seen In" logo strip. If not yet, target 3 parenting publications (Vogue Parents, Cosmopolitan Parents, regional parenting blogs) for review placement.</td>
+      </tr>
+      <tr>
+        <td>UGC / real photos</td>
+        <td>Absent</td>
+        <td>Absent</td>
+        <td>Instagram feed embed (Instafeed app) showing real children wearing the glasses. Min 9 posts. Launch #OlivioMoments hashtag campaign to generate UGC.</td>
+      </tr>
+      <tr>
+        <td>Trust at checkout</td>
+        <td>Standard Shopify checkout — no trust reinforcement</td>
+        <td>Not yet connected to checkout (Shopify pending)</td>
+        <td>Add trust badges bar in cart sidebar and checkout page: "🔒 Secure payment · ☀️ UV400 Certified · ♻️ Eco Packaging · ↩️ Easy Returns"</td>
+      </tr>
+    </table>
+
+    <div class="callout callout-red">
+      <strong>Priority #1 across entire audit:</strong> Customer reviews are absent on both the old and new site. For a children's safety product sold online to parents who cannot physically touch the product, peer reviews are non-negotiable. A single verified 5★ review saying "They actually stayed on my 2-year-old's face all day at the beach" is worth more than any award badge.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 6 — SEO & CONTENT
+═══════════════════════════════════════════════════ -->
+<div class="section" id="s6">
+  <div class="section-header">
+    <div class="section-num">06</div>
+    <div class="section-title">
+      <h2>SEO & Content Marketing</h2>
+      <p>Can new parents find this brand through organic search? Does content build authority?</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="score-row">
+      <span class="score-label">Existing Site</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill orange" style="width:60%"></div></div>
+      <span class="score-val" style="color:#f39c12">6.0</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">New Design</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill lime" style="width:87%"></div></div>
+      <span class="score-val" style="color:#2ecc71">8.7</span>
+    </div>
+
+    <table class="comp-table">
+      <tr>
+        <th>SEO Element</th>
+        <th>❌ Existing Site</th>
+        <th>✅ New Design</th>
+        <th>🎯 10/10 Target</th>
+      </tr>
+      <tr>
+        <td>Homepage title tag</td>
+        <td>"Olivio&Co: Eyewear Designed for Kids and Families" — weak, not keyword-optimised</td>
+        <td>"Buy Kids Sunglasses with UV400 Protection | Olivio & Co" — strong primary keyword front-loaded</td>
+        <td>Test: "Kids Sunglasses UV400 | Baby, Toddler & Junior Eyewear | Olivio & Co" — adds age modifiers searched by parents</td>
+      </tr>
+      <tr>
+        <td>About page title</td>
+        <td>Generic "About Us"</td>
+        <td>"About Olivio & Co | Mediterranean Kids Eyewear | 7 Awards" — brand + category + trust signal in one title</td>
+        <td>Near-perfect. Could add geographic: "| Paris, France" for local/EU trust</td>
+      </tr>
+      <tr>
+        <td>Blog titles</td>
+        <td>Informational but generic, all same publish date (stale)</td>
+        <td>5 articles March 2026: UV guide, size guide, ski goggles, blue light, Mediterranean holiday — all high-intent parent queries</td>
+        <td>Publish 2 new articles/month. Next targets: "Best kids sunglasses for babies who won't keep them on", "How to clean kids sunglasses", "Skiing with toddlers — packing guide"</td>
+      </tr>
+      <tr>
+        <td>Meta descriptions</td>
+        <td>Identical duplicated text across all collection pages — Google ignores</td>
+        <td>Each page has unique, targeted description confirmed</td>
+        <td>Perfect. Maintain uniqueness discipline as new Shopify collection pages are created.</td>
+      </tr>
+      <tr>
+        <td>URL slugs</td>
+        <td>Typos: /sungalsses-oval, /sungalsses-round (two Google-indexed broken URLs)</td>
+        <td>New URL scheme — no typos. Shopify URLs not yet final.</td>
+        <td>Final Shopify URLs should be: /collections/baby-sunglasses, /collections/kids-ski-goggles, /blogs/guide/[slug]. Set up 301 from all old EU store paths.</td>
+      </tr>
+      <tr>
+        <td>Structured data</td>
+        <td>No Product, Review, or Breadcrumb schema confirmed</td>
+        <td>FAQ schema indicated on homepage (FAQ section structure) — breadcrumb markup on About and Blog pages</td>
+        <td>Add: Product schema (price, availability, rating) on all PDPs. FAQ schema on homepage + blog. BreadcrumbList on all pages. Organization schema on About.</td>
+      </tr>
+      <tr>
+        <td>Internal linking</td>
+        <td>Weak — blog posts not linked to products; collections not cross-referenced</td>
+        <td>Strong: every blog preview on homepage links to article; every article links to catalog with age/type filter parameters; About links to Shop and Blog</td>
+        <td>Add inline product links within blog article body text: "…which is why our [Junior Ski Goggles →] are designed with anti-fog UV400 lenses."</td>
+      </tr>
+      <tr>
+        <td>Image SEO</td>
+        <td>Generic filenames (brask_fast.jpg, classic.jpg); alt text not confirmed</td>
+        <td>New design — alt text quality depends on implementation</td>
+        <td>All product images: alt="[Product Name] UV400 kids sunglasses [colour] [age range]". All hero images: alt="[Collection Name] kids sunglasses by Olivio & Co"</td>
+      </tr>
+    </table>
+
+    <div class="callout callout-green">
+      <strong>Standout Win:</strong> The blog strategy is now genuinely differentiated. Articles like "Ski Goggles vs Sunglasses for Kids" and "Blue Light Screen Glasses for Kids" target topics that Babiators and Roshambo have not published authoritative content on. If these rank, they deliver pre-qualified parent traffic directly to the catalog.
+    </div>
+    <div class="callout callout-blue">
+      <strong>Technical note:</strong> The new site is currently a static HTML prototype. Once migrated to Shopify, the filter parameters (?age=baby, ?type=ski) must either become Shopify collection URLs (for indexability) or be handled as non-indexable JavaScript filters with canonical tags pointing to the relevant collection.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 7 — CRO
+═══════════════════════════════════════════════════ -->
+<div class="section" id="s7">
+  <div class="section-header">
+    <div class="section-num">07</div>
+    <div class="section-title">
+      <h2>Conversion Optimization (CRO)</h2>
+      <p>Every element that moves a visitor from browsing to buying</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="score-row">
+      <span class="score-label">Existing Site</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill red" style="width:50%"></div></div>
+      <span class="score-val" style="color:#e74c3c">5.0</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">New Design</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill orange" style="width:65%"></div></div>
+      <span class="score-val" style="color:#f39c12">6.5</span>
+    </div>
+
+    <table class="comp-table">
+      <tr>
+        <th>CRO Element</th>
+        <th>❌ Existing Site</th>
+        <th>✅ New Design</th>
+        <th>🎯 10/10 Target</th>
+      </tr>
+      <tr>
+        <td>Email capture + incentive</td>
+        <td>Not visible on any page</td>
+        <td>10% OFF first order popup on Shop page, combined with country modal — clever double-use of a single modal</td>
+        <td>Separate email capture from country modal. Add inline email section on homepage. Trigger exit-intent popup on first visit (not on shop page load). A/B test "10% off" vs "free UV guide" incentive.</td>
+      </tr>
+      <tr>
+        <td>Free shipping threshold</td>
+        <td>Shown in header utility bar only</td>
+        <td>Shown in hero badge + FAQ section + footer strip: "Free shipping €69+"</td>
+        <td>Add dynamic cart progress bar: "Add €12 more for free shipping" visible in cart drawer</td>
+      </tr>
+      <tr>
+        <td>Buy Now vs Add to Cart</td>
+        <td>Standard Shopify — Add to Cart only</td>
+        <td>Both "Add to Cart" and "Buy Now →" present in product modal</td>
+        <td>Perfect. Ensure Buy Now goes to Shopify checkout directly (not cart). Test button colour: Buy Now in accent colour vs Add to Cart in neutral.</td>
+      </tr>
+      <tr>
+        <td>Urgency / scarcity</td>
+        <td>Absent</td>
+        <td>Filter includes "✓ In Stock" filter — implies stock awareness</td>
+        <td>Show low-stock indicators on product cards: "Only 3 left" for items with stock < 5. Add "Ships in 1–2 days" next to Add to Cart to reduce delivery uncertainty.</td>
+      </tr>
+      <tr>
+        <td>Loyalty / repeat purchase</td>
+        <td>Absent</td>
+        <td>Absent</td>
+        <td>Integrate Smile.io rewards: 1 point per €1, 100 points = €5 off. Bonus points for reviews, social shares, referrals. Given the brand's natural age-upgrade path (baby → toddler → kids), repeat purchase is a real behaviour to incentivise.</td>
+      </tr>
+      <tr>
+        <td>Wishlist</td>
+        <td>Absent</td>
+        <td>Absent</td>
+        <td>Essential for this category — parents research, save, share with grandparents for gift ideas. Add Swym Wishlist Plus. Enable shareable wishlist URL.</td>
+      </tr>
+      <tr>
+        <td>Abandoned cart recovery</td>
+        <td>Not confirmed</td>
+        <td>Not yet — pending Shopify connection</td>
+        <td>3-email abandoned cart flow via Klaviyo: Email 1 (1h): "You left something behind" + product image. Email 2 (24h): "Still thinking?" + size guide link. Email 3 (72h): "Here's 5% off to decide" + social proof quote.</td>
+      </tr>
+      <tr>
+        <td>Post-purchase upsell</td>
+        <td>Absent</td>
+        <td>Absent</td>
+        <td>ReConvert or Shopify native: Post-purchase page offers accessories (O-ring chain, silicone set) at 20% off when added immediately after checkout.</td>
+      </tr>
+    </table>
+
+    <div class="callout callout-orange">
+      <strong>CRO Assessment:</strong> The new design makes a strong leap in pre-cart conversion (better discovery, better trust, better education). The gap is post-browse: once a parent has chosen a product, the brand lacks the tools (wishlist, urgency, loyalty, abandonment recovery) to close the sale and win the second. These are all Shopify app integrations — low design effort, high revenue impact.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 8 — CUSTOMER EXPERIENCE
+═══════════════════════════════════════════════════ -->
+<div class="section" id="s8">
+  <div class="section-header">
+    <div class="section-num">08</div>
+    <div class="section-title">
+      <h2>Customer Experience & Support</h2>
+      <p>Post-purchase satisfaction, return experience, support accessibility</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="score-row">
+      <span class="score-label">Existing Site</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill orange" style="width:60%"></div></div>
+      <span class="score-val" style="color:#f39c12">6.0</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">New Design</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill lime" style="width:75%"></div></div>
+      <span class="score-val" style="color:#2ecc71">7.5</span>
+    </div>
+
+    <table class="comp-table">
+      <tr>
+        <th>Element</th>
+        <th>❌ Existing Site</th>
+        <th>✅ New Design</th>
+        <th>🎯 10/10 Target</th>
+      </tr>
+      <tr>
+        <td>Contact accessibility</td>
+        <td>Email only, in header utility bar</td>
+        <td>Phone + email + address on homepage + footer + about page. Clear "24h response" SLA stated.</td>
+        <td>Add live chat (Tidio or Shopify Inbox) with auto-reply for off-hours. Add Contact page with a form (not just mailto link).</td>
+      </tr>
+      <tr>
+        <td>FAQ quality</td>
+        <td>Basic FAQ page on Shopify covering order / account issues</td>
+        <td>Deep FAQ on homepage (UV, sizing, skiing, screen glasses, shipping) + FAQ in product modal (safety, size, ski, screen, shipping)</td>
+        <td>FAQ schema markup on all FAQ instances. Add FAQ section for returns/exchanges specifically — parents want to know it's risk-free before buying.</td>
+      </tr>
+      <tr>
+        <td>Returns & exchanges</td>
+        <td>Mentioned bluntly in FAQ: orders cannot be modified after submission</td>
+        <td>"Not the right fit? Contact us. We'll make it right." — empathetic language, proactive reassurance</td>
+        <td>Add a dedicated "Returns & Exchanges" page. State the return window clearly (e.g. 30 days). Show a simple 3-step process: 1. Contact us → 2. Send it back → 3. Get refund or exchange within 5 business days.</td>
+      </tr>
+      <tr>
+        <td>Cross-store account</td>
+        <td>EU and US accounts are separate — explicitly noted in FAQ, causes friction</td>
+        <td>Currently EU-only (.eu store only in new design) — simplifies this problem</td>
+        <td>Long-term: Shopify Markets with single sign-on across regions. Eliminate the dual-account problem entirely.</td>
+      </tr>
+      <tr>
+        <td>Order tracking</td>
+        <td>FAQ mentions order tracking but experience not confirmed</td>
+        <td>Not yet live — pending Shopify connection</td>
+        <td>Shopify native order tracking + branded tracking page (Route or AfterShip). Branded page reduces "Where is my order?" support tickets by ~40%.</td>
+      </tr>
+      <tr>
+        <td>Parent guarantee</td>
+        <td>No explicit guarantee beyond standard returns</td>
+        <td>Homepage "Promise" section: Quality Guarantee / Fast Shipping / Real Support / Returns & Exchanges — 4 specific promises with icons</td>
+        <td>Name the guarantee. "The Olivio Parent Promise" or similar. A named guarantee is more memorable and more credible than a generic promise section.</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 9 — SOCIAL MEDIA
+═══════════════════════════════════════════════════ -->
+<div class="section" id="s9">
+  <div class="section-header">
+    <div class="section-num">09</div>
+    <div class="section-title">
+      <h2>Social Media & Community</h2>
+      <p>Discovery, UGC, virality, and off-site brand presence</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="score-row">
+      <span class="score-label">Existing Site</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill red" style="width:40%"></div></div>
+      <span class="score-val" style="color:#e74c3c">4.0</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">New Design</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill red" style="width:48%"></div></div>
+      <span class="score-val" style="color:#e74c3c">4.8</span>
+    </div>
+
+    <p>This is the dimension where the new design makes the least progress. The existing site had no social integration; the new design adds Instagram and Facebook links in the footer, but nothing embedded or community-driven on the site itself.</p>
+
+    <table class="comp-table">
+      <tr>
+        <th>Element</th>
+        <th>❌ Existing Site</th>
+        <th>✅ New Design</th>
+        <th>🎯 10/10 Target</th>
+      </tr>
+      <tr>
+        <td>Instagram / social links</td>
+        <td>Not confirmed in main navigation or homepage</td>
+        <td>Instagram + Facebook icons in footer only</td>
+        <td>Add social links to header (subtle icon row). Instagram link should open in new tab. Add Pinterest (brand has confirmed Pinterest presence).</td>
+      </tr>
+      <tr>
+        <td>Instagram feed embed</td>
+        <td>Absent</td>
+        <td>Absent</td>
+        <td>Instafeed or Foursixty app. Show 6–9 most recent posts on homepage with "Follow @olivioandco" CTA. Prioritise posts showing children wearing the glasses (real lifestyle UGC).</td>
+      </tr>
+      <tr>
+        <td>TikTok</td>
+        <td>Not confirmed</td>
+        <td>Not linked</td>
+        <td>Launch TikTok account. Content types that work for this category: "Will a toddler keep sunglasses on? Day 1 vs Day 7", unboxing, beach day content, "Mediterranean mum" lifestyle. Target 1 video/week.</td>
+      </tr>
+      <tr>
+        <td>Branded hashtag</td>
+        <td>Absent</td>
+        <td>Absent</td>
+        <td>Launch #OlivioMoments. Feature it in product packaging, order confirmation email, and homepage. Curate best submissions on site. Offer monthly prize for best photo.</td>
+      </tr>
+      <tr>
+        <td>Influencer programme</td>
+        <td>Absent</td>
+        <td>Absent</td>
+        <td>Identify 10–15 European family/parenting micro-influencers (10k–100k followers). Gifting programme with unique discount codes per creator. Track attributable revenue per influencer.</td>
+      </tr>
+      <tr>
+        <td>Sharing on blog</td>
+        <td>Not confirmed</td>
+        <td>Blog exists — share buttons not confirmed</td>
+        <td>Add Pinterest, WhatsApp, and Facebook share buttons to every blog article. Pinterest is a top discovery channel for parenting content and highly evergreen.</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 10 — SUSTAINABILITY
+═══════════════════════════════════════════════════ -->
+<div class="section" id="s10">
+  <div class="section-header">
+    <div class="section-num">10</div>
+    <div class="section-title">
+      <h2>Sustainability Communication</h2>
+      <p>Is the genuine eco-commitment communicated convincingly and prominently?</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="score-row">
+      <span class="score-label">Existing Site</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill orange" style="width:60%"></div></div>
+      <span class="score-val" style="color:#f39c12">6.0</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">New Design</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill lime" style="width:80%"></div></div>
+      <span class="score-val" style="color:#2ecc71">8.0</span>
+    </div>
+
+    <table class="comp-table">
+      <tr>
+        <th>Element</th>
+        <th>❌ Existing Site</th>
+        <th>✅ New Design</th>
+        <th>🎯 10/10 Target</th>
+      </tr>
+      <tr>
+        <td>Eco claims on homepage</td>
+        <td>Mentioned in About Us only</td>
+        <td>Full "Designed to last. Packaged to care." section on homepage with 3 specific claims + Red Dot Award callout</td>
+        <td>Add one sentence of measurable impact: "Every year, our packaging prevents X kg of plastic entering landfill."</td>
+      </tr>
+      <tr>
+        <td>Green Product Award</td>
+        <td>Listed on About Us but no badge imagery</td>
+        <td>Listed in About page awards grid (2022 Green Product Award — Sustainable Design)</td>
+        <td>This award specifically validates the sustainability story. Display its badge prominently in the eco section.</td>
+      </tr>
+      <tr>
+        <td>Dedicated sustainability page</td>
+        <td>Absent</td>
+        <td>Absent — integrated into homepage and About</td>
+        <td>Create /pages/sustainability. Include: packaging breakdown, material sourcing, carbon footprint statement, future commitments, Green Product Award. This page can rank for "sustainable kids sunglasses" queries.</td>
+      </tr>
+      <tr>
+        <td>Anti-greenwashing tone</td>
+        <td>N/A</td>
+        <td>Excellent: "No greenwashing — just standards." and "not as a marketing campaign, but as a founding principle."</td>
+        <td>Perfect tone. Keep exactly this language. It's credible because it's specific and non-boastful.</td>
+      </tr>
+      <tr>
+        <td>Third-party certification</td>
+        <td>Green Product Award only</td>
+        <td>Green Product Award + Red Dot (for packaging)</td>
+        <td>Explore B Corp certification long-term. Short-term: apply for 1% for the Planet or similar membership for visible third-party eco-credibility.</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 11 — B2B
+═══════════════════════════════════════════════════ -->
+<div class="section" id="s11">
+  <div class="section-header">
+    <div class="section-num">11</div>
+    <div class="section-title">
+      <h2>B2B & Wholesale</h2>
+      <p>Is the retail/wholesale channel supported and discoverable from the consumer site?</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="score-row">
+      <span class="score-label">Existing Site</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill orange" style="width:70%"></div></div>
+      <span class="score-val" style="color:#f39c12">7.0</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">New Design</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill orange" style="width:70%"></div></div>
+      <span class="score-val" style="color:#f39c12">7.0</span>
+    </div>
+
+    <p>This dimension scores identically because the new consumer-facing design does not yet reference the B2B platform. The wholesale infrastructure (b2b.olivioandco.com) is strong and unchanged.</p>
+
+    <table class="comp-table">
+      <tr>
+        <th>Element</th>
+        <th>Existing / New (Same)</th>
+        <th>🎯 10/10 Target</th>
+      </tr>
+      <tr>
+        <td>B2B platform</td>
+        <td>Strong dedicated portal: b2b.olivioandco.com with Shop / T&Cs / Size Guide / Image Bank</td>
+        <td>Add "For Retailers" or "Trade" link in footer of consumer site. Don't make wholesale buyers search for it.</td>
+      </tr>
+      <tr>
+        <td>Retailer locator</td>
+        <td>Absent from consumer site</td>
+        <td>Add "Find a Store" page or locator map. If no physical retail yet, add "Interested in stocking Olivio & Co? Apply here →" link to a wholesale contact form.</td>
+      </tr>
+      <tr>
+        <td>Trade credibility signals</td>
+        <td>B2B site exists — signals scale to trade buyers</td>
+        <td>On About page: add "Available in X+ retail stores across Europe" once this is true. Trade credibility reinforces consumer trust.</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 12 — OVERALL SCORECARD
+═══════════════════════════════════════════════════ -->
+<div class="section" id="s12">
+  <div class="section-header">
+    <div class="section-num">12</div>
+    <div class="section-title">
+      <h2>Overall Scorecard</h2>
+      <p>All 11 dimensions · Existing vs New Design vs 10/10 Target</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <table class="comp-table">
+      <tr>
+        <th>Dimension</th>
+        <th>Existing Site</th>
+        <th>New Design</th>
+        <th>Gap to 10/10</th>
+      </tr>
+      <tr><td>01 · Brand Positioning</td><td>7.0</td><td><strong>9.0</strong> ▲+2.0</td><td>−1.0 · Award badge imagery</td></tr>
+      <tr><td>02 · Navigation & Architecture</td><td>5.5</td><td><strong>7.5</strong> ▲+2.0</td><td>−2.5 · Post-Shopify nav rebuild</td></tr>
+      <tr><td>03 · Homepage Effectiveness</td><td>5.0</td><td><strong>8.5</strong> ▲+3.5</td><td>−1.5 · Reviews + email capture</td></tr>
+      <tr><td>04 · Product Pages & Catalog</td><td>6.0</td><td><strong>8.2</strong> ▲+2.2</td><td>−1.8 · Reviews + wishlist + Shopify URL indexability</td></tr>
+      <tr><td>05 · Trust & Social Proof</td><td>4.0</td><td><strong>6.5</strong> ▲+2.5</td><td>−3.5 · Reviews + UGC + certification badges</td></tr>
+      <tr><td>06 · SEO & Content</td><td>6.0</td><td><strong>8.7</strong> ▲+2.7</td><td>−1.3 · Schema markup + Shopify URL migration</td></tr>
+      <tr><td>07 · Conversion Optimization</td><td>5.0</td><td><strong>6.5</strong> ▲+1.5</td><td>−3.5 · Wishlist + loyalty + abandonment flow + urgency</td></tr>
+      <tr><td>08 · Customer Experience</td><td>6.0</td><td><strong>7.5</strong> ▲+1.5</td><td>−2.5 · Live chat + returns page + order tracking</td></tr>
+      <tr><td>09 · Social Media & Community</td><td>4.0</td><td><strong>4.8</strong> ▲+0.8</td><td>−5.2 · Biggest remaining gap overall</td></tr>
+      <tr><td>10 · Sustainability</td><td>6.0</td><td><strong>8.0</strong> ▲+2.0</td><td>−2.0 · Dedicated page + measurable impact data</td></tr>
+      <tr><td>11 · B2B / Wholesale</td><td>7.0</td><td><strong>7.0</strong> →+0.0</td><td>−3.0 · Retailer locator + trade link in footer</td></tr>
+      <tr style="background:#fafafa; font-weight:800;"><td>OVERALL (avg)</td><td>5.96</td><td><strong>7.48</strong> ▲+1.52</td><td>−2.52 · ~25 specific actions</td></tr>
+    </table>
+
+    <div class="callout callout-blue">
+      <strong>Summary:</strong> The new design delivers a 1.52-point overall improvement — equivalent to moving from "good enough to launch" to "competitive and credible." The remaining 2.52 points to reach 10/10 are achievable through Shopify app integrations (reviews, wishlist, loyalty, chat) and a focused social/UGC programme. None require a redesign — they are additions, not corrections.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     ROADMAP TO 10/10
+═══════════════════════════════════════════════════ -->
+<div class="section" id="roadmap">
+  <div class="section-header">
+    <div class="section-num" style="background:#e25a1c">→</div>
+    <div class="section-title">
+      <h2>Roadmap to 10/10 — 3 Phases</h2>
+      <p>Every remaining gap, prioritised by impact, with specific tools and implementation notes</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <!-- PHASE 1 -->
+    <div class="roadmap-phase phase-red">
+      <div class="phase-title" style="color:#e74c3c">Phase 1 — Launch Blockers & Quick Wins</div>
+      <div class="phase-sub">Complete before or at Shopify go-live · Estimated effort: 2–3 weeks</div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">1.1 · Install customer review system</span>
+          <div class="task-meta"><span class="task-impact impact-critical">CRITICAL</span><span class="chip chip-blue">Scores: 03, 04, 05, 07</span></div>
+        </div>
+        <div class="task-body">
+          The #1 conversion lever on the entire site. Absent on both old and new design.
+          <ul>
+            <li>Install <strong>Judge.me</strong> (free tier available) or <strong>Yotpo</strong> on Shopify</li>
+            <li>Configure post-purchase review request email: triggers 14 days after delivery</li>
+            <li>Retroactively email all past customers: "We'd love your feedback — here's 5% off your next order for a review"</li>
+            <li>Set target: 50 verified reviews before launch. 200 within 90 days.</li>
+            <li>Display: star rating below product name on grid cards, full reviews in PDP modal, carousel on homepage</li>
+            <li>Enable photo reviews — parent photos of children wearing glasses = gold UGC</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">Judge.me</span><span class="tool-tag">Yotpo</span><span class="tool-tag">Shopify Email</span><span class="tool-tag">Klaviyo</span></div>
+        </div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">1.2 · Replace country modal with geo-IP routing</span>
+          <div class="task-meta"><span class="task-impact impact-critical">CRITICAL</span><span class="chip chip-blue">Score: 02, 07</span></div>
+        </div>
+        <div class="task-body">
+          Current: modal still blocks the shop page on grid5.html on every visit.
+          <ul>
+            <li>Use <strong>Shopify Markets</strong> geo-detection to auto-assign currency and store</li>
+            <li>Show a dismissible banner only when IP country doesn't match store: "Looks like you're browsing from Germany — shop our EU Store for faster delivery →"</li>
+            <li>Keep 10% off email capture as a separate, time-delayed popup (15s after landing, or exit-intent)</li>
+            <li>Never block the page. Never show modal on return visits (set cookie).</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">Shopify Markets</span><span class="tool-tag">Geolocation API</span><span class="tool-tag">Cookie management</span></div>
+        </div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">1.3 · Add award badge imagery (official logos)</span>
+          <div class="task-meta"><span class="task-impact impact-high">HIGH</span><span class="chip chip-blue">Scores: 01, 05</span></div>
+        </div>
+        <div class="task-body">
+          Award names appear as text. The actual Red Dot circle logo and iF Design logo are globally recognised.
+          <ul>
+            <li>Request official logo usage rights from Red Dot, iF Design, ADC (standard process, usually free for award winners)</li>
+            <li>Place: homepage awards section (logos, not text), product pages (badge strip below price), About page (alongside existing text list), footer</li>
+            <li>Alt text: "Red Dot Award 2020 winner — Olivio & Co packaging design"</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">Red Dot Portal</span><span class="tool-tag">iF World Design Guide</span></div>
+        </div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">1.4 · Set up Shopify URL structure + 301 redirects</span>
+          <div class="task-meta"><span class="task-impact impact-high">HIGH</span><span class="chip chip-blue">Score: 02, 06</span></div>
+        </div>
+        <div class="task-body">
+          The static site uses query parameters (?age=baby) which are not indexable by Google as separate pages.
+          <ul>
+            <li>Map each filter combination to a Shopify collection: /collections/baby-sunglasses, /collections/kids-ski-goggles, /collections/junior-screen-glasses</li>
+            <li>301 redirect all old typo URLs: /sungalsses-oval → /collections/sunglasses-oval</li>
+            <li>301 redirect old blog slugs to new blog structure</li>
+            <li>Submit updated sitemap to Google Search Console within 48h of launch</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">Shopify URL Redirects</span><span class="tool-tag">Google Search Console</span><span class="tool-tag">Screaming Frog</span></div>
+        </div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">1.5 · Add structured data (JSON-LD schema) to all key pages</span>
+          <div class="task-meta"><span class="task-impact impact-high">HIGH</span><span class="chip chip-blue">Score: 06</span></div>
+        </div>
+        <div class="task-body">
+          No schema markup confirmed on existing or new site. This is free SEO that most competitors skip.
+          <ul>
+            <li><strong>Product schema</strong>: name, description, image, price, currency, availability, aggregate rating — on every PDP</li>
+            <li><strong>FAQ schema</strong>: on homepage FAQ, blog page FAQ, product modal FAQ — enables Google featured snippets</li>
+            <li><strong>BreadcrumbList</strong>: on all collection and product pages</li>
+            <li><strong>Organization schema</strong>: on About page — name, URL, logo, founding date, awards</li>
+            <li>Validate with Google's Rich Results Test before launch</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">Shopify SEO Manager</span><span class="tool-tag">JSON-LD for SEO</span><span class="tool-tag">Google Rich Results Test</span></div>
+        </div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">1.6 · Add wishlist functionality</span>
+          <div class="task-meta"><span class="task-impact impact-high">HIGH</span><span class="chip chip-blue">Scores: 04, 07</span></div>
+        </div>
+        <div class="task-body">
+          Parents research over multiple sessions; grandparents buy from shared lists. Wishlist is essential for gifting behaviour.
+          <ul>
+            <li>Install <strong>Swym Wishlist Plus</strong> or <strong>Wishlist King</strong> on Shopify</li>
+            <li>Add heart icon (♡) overlay on all product card thumbnails</li>
+            <li>Enable shareable wishlist URLs — critical for gift scenario: parent shares wishlist with grandparents before birthday</li>
+            <li>Wishlist reminder email: 7 days after item added, "Your saved items are waiting"</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">Swym Wishlist Plus</span><span class="tool-tag">Wishlist King</span></div>
+        </div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">1.7 · Homepage inline email capture</span>
+          <div class="task-meta"><span class="task-impact impact-high">HIGH</span><span class="chip chip-blue">Scores: 03, 07</span></div>
+        </div>
+        <div class="task-body">
+          Email list is the highest-ROI owned marketing channel. Currently captured only on the shop page modal.
+          <ul>
+            <li>Add a dedicated email signup section on homepage (between blog previews and FAQ): "Get 10% off + receive our free UV Eye Protection Guide"</li>
+            <li>Separate the email capture from the country modal — they serve different functions and should not compete</li>
+            <li>Exit-intent popup on first visit (not repeat visits) — 15% off or free guide incentive</li>
+            <li>Connect to Klaviyo for automated welcome flow (3 emails: welcome + brand story + first purchase guide)</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">Klaviyo</span><span class="tool-tag">Shopify Forms</span><span class="tool-tag">Privy / Justuno</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="roadmap-phase phase-orange">
+      <div class="phase-title" style="color:#f39c12">Phase 2 — Conversion Infrastructure</div>
+      <div class="phase-sub">Complete within 30–60 days post-launch · Estimated effort: 3–4 weeks</div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">2.1 · Abandoned cart email flow (Klaviyo)</span>
+          <div class="task-meta"><span class="task-impact impact-high">HIGH</span><span class="chip chip-blue">Score: 07</span></div>
+        </div>
+        <div class="task-body">
+          Industry standard: 5–15% of abandoned carts recovered via email. For a €30–€70 AOV, each recovered cart is significant.
+          <ul>
+            <li><strong>Email 1 (1 hour after abandonment):</strong> "You left something behind" — product image, name, price, direct link to cart</li>
+            <li><strong>Email 2 (24 hours):</strong> "Still thinking?" — add size guide link + one customer review quote + "We respond within 24h if you have questions"</li>
+            <li><strong>Email 3 (72 hours):</strong> "Last chance" — 5% off code with 48h expiry + social proof (review count)</li>
+            <li>Do not show discount in Email 1 — many will convert without it</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">Klaviyo</span><span class="tool-tag">Shopify Checkout</span></div>
+        </div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">2.2 · Launch loyalty/rewards programme (Smile.io)</span>
+          <div class="task-meta"><span class="task-impact impact-high">HIGH</span><span class="chip chip-blue">Score: 07</span></div>
+        </div>
+        <div class="task-body">
+          Natural repeat-purchase dynamic: children grow through 6 age categories over ~12 years.
+          <ul>
+            <li>Install <strong>Smile.io</strong> — free tier supports up to 200 monthly orders</li>
+            <li>Points: 1 point per €1 spent. 100 points = €5 reward.</li>
+            <li>Bonus points: +50 for a photo review, +30 for social share, +100 for referring a friend (friend gets 10% off first order)</li>
+            <li>Birthday reward: double points in the birth month of the child (ask during account setup)</li>
+            <li>"Age upgrade" campaign: when a child's size category changes, email: "Time to size up? Use your rewards points."</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">Smile.io</span><span class="tool-tag">Klaviyo</span></div>
+        </div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">2.3 · Live chat (Tidio or Shopify Inbox)</span>
+          <div class="task-meta"><span class="task-impact impact-medium">MEDIUM</span><span class="chip chip-blue">Score: 08</span></div>
+        </div>
+        <div class="task-body">
+          <ul>
+            <li>Install <strong>Tidio</strong> (free tier) or <strong>Shopify Inbox</strong> (native, free)</li>
+            <li>Configure automated responses for top 5 questions: sizing, shipping time, UV protection, returns, screen glasses</li>
+            <li>Show "We're online" indicator during Paris business hours (9:00–18:00 CET). Auto-reply off-hours: "We'll respond within 24 hours."</li>
+            <li>Chat widget should NOT obscure the Add to Cart button on mobile</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">Tidio</span><span class="tool-tag">Shopify Inbox</span></div>
+        </div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">2.4 · Urgency & scarcity signals on product cards</span>
+          <div class="task-meta"><span class="task-impact impact-medium">MEDIUM</span><span class="chip chip-blue">Score: 07</span></div>
+        </div>
+        <div class="task-body">
+          <ul>
+            <li>"Only 3 left in this colour" label on product cards where stock ≤ 5 units</li>
+            <li>"Bestseller" badge on the top 10% of products by units sold</li>
+            <li>"Ships today if ordered before 15:00 CET" on product pages during business hours</li>
+            <li>"Free delivery on this order — you're €X away" dynamic bar in cart drawer</li>
+            <li>Do not fabricate urgency — only show real data. False scarcity erodes trust.</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">Shopify Inventory API</span><span class="tool-tag">Custom Liquid</span></div>
+        </div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">2.5 · Post-purchase upsell (ReConvert)</span>
+          <div class="task-meta"><span class="task-impact impact-medium">MEDIUM</span><span class="chip chip-blue">Score: 07</span></div>
+        </div>
+        <div class="task-body">
+          <ul>
+            <li>Install <strong>ReConvert</strong> for thank-you page customisation</li>
+            <li>Offer: "Add accessories to your order — 20% off in the next 15 minutes" — show silicone set, O-ring chain</li>
+            <li>Include: order summary, delivery estimate, and review request preview ("We'll ask for your feedback in 14 days")</li>
+            <li>Add birthday field on thank-you page: "When is your child's birthday?" — feeds Klaviyo for birthday campaigns</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">ReConvert</span><span class="tool-tag">Klaviyo</span></div>
+        </div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">2.6 · Create dedicated Returns & Sustainability pages</span>
+          <div class="task-meta"><span class="task-impact impact-medium">MEDIUM</span><span class="chip chip-blue">Scores: 08, 10</span></div>
+        </div>
+        <div class="task-body">
+          <ul>
+            <li><strong>/pages/returns</strong>: 3-step visual return process. State: 30-day window, free exchange for size issues, refund timeline. Remove all friction language.</li>
+            <li><strong>/pages/sustainability</strong>: Full eco story. Sugarcane packaging breakdown. Recycled PET cloth. Material research timeline. Red Dot + Green Product Award logos. Future commitments. Can rank for "sustainable kids sunglasses."</li>
+            <li>Link both pages prominently in footer and product page trust bars</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">Shopify Pages</span><span class="tool-tag">Shopify Metafields</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="roadmap-phase phase-green">
+      <div class="phase-title" style="color:#27ae60">Phase 3 — Community, Authority & Growth</div>
+      <div class="phase-sub">Complete within 60–120 days post-launch · Ongoing investment</div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">3.1 · Instagram UGC feed on website + #OlivioMoments campaign</span>
+          <div class="task-meta"><span class="task-impact impact-high">HIGH</span><span class="chip chip-blue">Score: 09</span></div>
+        </div>
+        <div class="task-body">
+          <ul>
+            <li>Install <strong>Instafeed</strong> or <strong>Foursixty</strong> — show 9 most recent/curated posts on homepage and on collection pages</li>
+            <li>Launch <strong>#OlivioMoments</strong> hashtag: feature in product packaging insert, order confirmation email, and homepage</li>
+            <li>Monthly prize (e.g. gift card) for best submitted photo — generates ongoing UGC without ongoing budget</li>
+            <li>Allow photo reviews (Judge.me supports this) — customer photos on products are the most trusted form of UGC</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">Instafeed</span><span class="tool-tag">Foursixty</span><span class="tool-tag">Judge.me photo reviews</span></div>
+        </div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">3.2 · TikTok account launch</span>
+          <div class="task-meta"><span class="task-impact impact-high">HIGH</span><span class="chip chip-blue">Score: 09</span></div>
+        </div>
+        <div class="task-body">
+          <ul>
+            <li>Create @olivioandco TikTok. Post 1 video/week minimum.</li>
+            <li>Content pillars: (1) "Will a toddler actually keep sunglasses on?" real-life test videos. (2) Mediterranean lifestyle — beach days, family holidays. (3) Educational: "70% more UV than adults — here's why kids need protection." (4) Behind the scenes: packaging, design studio, Paris base.</li>
+            <li>Engage with #kidsunglasses, #toddlermom, #familytravel, #mediterraneanlife communities</li>
+            <li>TikTok Shop integration when available in EU markets</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">TikTok Business</span><span class="tool-tag">CapCut (editing)</span></div>
+        </div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">3.3 · Micro-influencer gifting programme</span>
+          <div class="task-meta"><span class="task-impact impact-high">HIGH</span><span class="chip chip-blue">Score: 09</span></div>
+        </div>
+        <div class="task-body">
+          <ul>
+            <li>Identify 15–20 EU family/parenting micro-influencers (Instagram 10k–100k, authentic parent content, France/Germany/Netherlands/Spain focus)</li>
+            <li>Send gifted product (2 pairs per influencer) with a handwritten note — the Mediterranean story makes this feel premium</li>
+            <li>No scripted content requirement. Ask only for honest review if they love it.</li>
+            <li>Provide unique 10% off discount code per creator to track attributable revenue</li>
+            <li>Budget: €1,500–€3,000 in product cost for 15 influencers — significantly cheaper than paid ads with longer-tail value</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">Modash / Heepsy (influencer search)</span><span class="tool-tag">Shopify discount codes</span></div>
+        </div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">3.4 · Content calendar — 2 articles/month + Pinterest strategy</span>
+          <div class="task-meta"><span class="task-impact impact-medium">MEDIUM</span><span class="chip chip-blue">Score: 06</span></div>
+        </div>
+        <div class="task-body">
+          <ul>
+            <li>Next 6 article targets: "Best sunglasses for babies who won't keep them on", "Kids sunglasses cleaning guide", "Skiing with toddlers — full packing list", "Screen time and children's eyes — 2025 evidence review", "Best kids sunglasses for wide faces", "When do you know your child needs screen glasses?"</li>
+            <li>Each article: 1,500+ words, internal product links, FAQ schema, Pinterest-optimised header image (2:3 ratio)</li>
+            <li><strong>Pinterest strategy</strong>: Create Olivio & Co board structure: "Kids Sun Protection", "Mediterranean Family Travel", "Eye Health for Children", "Kids Eyewear Style". Pin every blog article + product shots. Pinterest is evergreen — pins drive traffic for years.</li>
+            <li>Add social share buttons (Pinterest, WhatsApp, Facebook) to every blog article</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">Shopify Blog</span><span class="tool-tag">Pinterest Business</span><span class="tool-tag">Canva (pin design)</span></div>
+        </div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">3.5 · "Find a Store" retailer locator + B2B footer link</span>
+          <div class="task-meta"><span class="task-impact impact-medium">MEDIUM</span><span class="chip chip-blue">Score: 11</span></div>
+        </div>
+        <div class="task-body">
+          <ul>
+            <li>Add "For Retailers / Trade" link in footer of consumer site — links to b2b.olivioandco.com</li>
+            <li>Create /pages/stockists — list retail partners by country with Google Maps integration</li>
+            <li>If no physical retail partners yet: create a "Become a Stockist" application page instead</li>
+            <li>Physical retail presence validates brand credibility for online shoppers ("If a real toy shop stocks it, it must be legit")</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">Shopify Pages</span><span class="tool-tag">Google Maps Embed</span></div>
+        </div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-card-header">
+          <span class="task-title">3.6 · Branded order tracking + packaging insert</span>
+          <div class="task-meta"><span class="task-impact impact-medium">MEDIUM</span><span class="chip chip-blue">Score: 08</span></div>
+        </div>
+        <div class="task-body">
+          <ul>
+            <li>Install <strong>AfterShip</strong> or <strong>Route</strong> for branded tracking page — reduce "where is my order?" support tickets</li>
+            <li>Tracking page should include: order summary, brand story excerpt, Instagram link, review request teaser</li>
+            <li>Design a <strong>packaging insert</strong> (printed card in every box): "Thank you for choosing Olivio & Co. Share your #OlivioMoments. Leave us a review — here's how." Include QR code to review page.</li>
+            <li>Insert cost: ~€0.05/unit. Review value: ~€8–€15 in lifetime customer value impact.</li>
+          </ul>
+          <div class="task-tools"><span class="tool-tag">AfterShip</span><span class="tool-tag">Route</span><span class="tool-tag">Canva (insert design)</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<div class="section" id="summary">
+  <div class="section-header">
+    <div class="section-num" style="background:#27ae60">★</div>
+    <div class="section-title">
+      <h2>Executive Summary</h2>
+      <p>What was broken, what's fixed, what remains, what it takes to reach 10/10</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3>What the new design fixes (vs. existing site)</h3>
+    <ul class="detail-list">
+      <li><span class="icon">✅</span>Broken search widget eliminated</li>
+      <li><span class="icon">✅</span>Homepage value proposition — clear, keyword-optimised H1 + 5 trust badges above fold</li>
+      <li><span class="icon">✅</span>Award credentials — visible on homepage, About page, footer (was hidden on About only)</li>
+      <li><span class="icon">✅</span>Competitor positioning — explicit Babiators/Roshambo comparison with factual differentiators</li>
+      <li><span class="icon">✅</span>Size guide — full 6-category table with head measurements on homepage and product grid</li>
+      <li><span class="icon">✅</span>Blog rebuilt — 5 long-form expert articles published March 2026 on high-intent parent queries</li>
+      <li><span class="icon">✅</span>Meta titles — unique, keyword-targeted titles per page (was duplicated across all collections)</li>
+      <li><span class="icon">✅</span>Contact visibility — phone, email, address on homepage + footer (was buried in utility bar)</li>
+      <li><span class="icon">✅</span>URL typos — all corrected in new URL scheme</li>
+      <li><span class="icon">✅</span>Homepage typo ("CREATIVE DEDITION") — fixed</li>
+      <li><span class="icon">✅</span>Eco story — dedicated homepage section + anti-greenwashing language + Red Dot linkage</li>
+      <li><span class="icon">✅</span>Email capture — 10% off incentive added (was entirely absent)</li>
+      <li><span class="icon">✅</span>Innovative catalog UX — 4 view modes (Grid/Sphere/Flat/Flow), multi-dimensional filters</li>
+      <li><span class="icon">✅</span>FAQ sections — deep Q&As on every page, directly addressing parent purchase anxieties</li>
+      <li><span class="icon">✅</span>Parent promise — "What if it breaks?" section with 4 specific, empathetic guarantees</li>
+    </ul>
+
+    <hr>
+
+    <h3>What still needs to be done to reach 10/10</h3>
+    <ul class="detail-list">
+      <li><span class="icon">🔴</span><strong>Customer reviews</strong> — the most impactful single remaining action. Judge.me post-purchase emails, retroactive campaign, photo reviews enabled.</li>
+      <li><span class="icon">🔴</span><strong>Award badge imagery</strong> — obtain official Red Dot / iF Design logo files. Display as recognisable icons, not text.</li>
+      <li><span class="icon">🔴</span><strong>Wishlist</strong> — Swym Wishlist Plus. Critical for gifting scenarios and multi-session research behaviour.</li>
+      <li><span class="icon">🟡</span><strong>Geo-IP routing</strong> — replace shop page country modal with auto-detection + dismissible banner</li>
+      <li><span class="icon">🟡</span><strong>Shopify URL indexability</strong> — filter parameters must map to crawlable collection URLs post-migration</li>
+      <li><span class="icon">🟡</span><strong>Structured data / Schema</strong> — Product, FAQ, Breadcrumb, Organization markup on all pages</li>
+      <li><span class="icon">🟡</span><strong>Abandoned cart email flow</strong> — 3-email Klaviyo sequence for 5–15% cart recovery rate</li>
+      <li><span class="icon">🟡</span><strong>Loyalty programme</strong> — Smile.io, points for purchase + reviews + referrals + age upgrades</li>
+      <li><span class="icon">🟡</span><strong>Live chat</strong> — Tidio or Shopify Inbox, business hours only with auto-reply</li>
+      <li><span class="icon">🟡</span><strong>Instagram UGC feed</strong> — Instafeed on homepage. Launch #OlivioMoments campaign.</li>
+      <li><span class="icon">🟡</span><strong>Sustainability page</strong> — /pages/sustainability, standalone, indexable, full detail</li>
+      <li><span class="icon">🟡</span><strong>Returns page</strong> — /pages/returns, 3-step process, risk-free language, links from PDP</li>
+      <li><span class="icon">🟢</span><strong>TikTok</strong> — launch account, 1 video/week, parent lifestyle + educational content</li>
+      <li><span class="icon">🟢</span><strong>Micro-influencer programme</strong> — 15–20 EU family creators, gifting, unique codes</li>
+      <li><span class="icon">🟢</span><strong>B2B footer link + retailer locator</strong> — surface the trade channel from consumer site</li>
+      <li><span class="icon">🟢</span><strong>Pinterest strategy</strong> — board structure, pin every article, 2:3 pin images, evergreen traffic</li>
+      <li><span class="icon">🟢</span><strong>Post-purchase upsell</strong> — ReConvert thank-you page with accessories offer + birthday field</li>
+      <li><span class="icon">🟢</span><strong>Content calendar</strong> — 2 articles/month, next 6 targets defined, internal product links in body</li>
+    </ul>
+
+    <div class="callout callout-blue">
+      <strong>The opportunity in one sentence:</strong> Olivio & Co has the best product credentials, the most distinctive brand story, and the most innovative catalog UX in the children's eyewear space — and is currently losing sales every day because first-time parents have no peer reviews to trust, no wishlists to share, and no loyalty reason to come back. Fix those three things first, and everything else compounds on top.
+    </div>
+
+    <div style="margin-top:28px; display:flex; gap:12px; flex-wrap:wrap;">
+      <div style="flex:1; min-width:200px; background:#fde8e8; border-radius:10px; padding:18px; text-align:center;">
+        <div style="font-size:2.2em; font-weight:900; color:#e74c3c;">5.96</div>
+        <div style="font-size:0.8em; color:#888; margin-top:4px;">Existing Site Score</div>
+      </div>
+      <div style="flex:1; min-width:200px; background:#fff3e0; border-radius:10px; padding:18px; text-align:center;">
+        <div style="font-size:2.2em; font-weight:900; color:#f39c12;">7.48</div>
+        <div style="font-size:0.8em; color:#888; margin-top:4px;">New Design Score</div>
+      </div>
+      <div style="flex:1; min-width:200px; background:#e3f9ee; border-radius:10px; padding:18px; text-align:center;">
+        <div style="font-size:2.2em; font-weight:900; color:#27ae60;">10.0</div>
+        <div style="font-size:0.8em; color:#888; margin-top:4px;">Target (all phases complete)</div>
+      </div>
+      <div style="flex:1; min-width:200px; background:#e8f0fe; border-radius:10px; padding:18px; text-align:center;">
+        <div style="font-size:2.2em; font-weight:900; color:#1a3a8c;">25</div>
+        <div style="font-size:0.8em; color:#888; margin-top:4px;">Specific actions identified</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div style="text-align:center; color:#bbb; font-size:0.8em; padding:40px 0 20px;">
+  OLIVIO & CO · Full Website Audit · March 2026 · decentralize-dfw.github.io/olivioandco analysis
+</div>
+
+</div><!-- /container -->
+</body>
+</html>
