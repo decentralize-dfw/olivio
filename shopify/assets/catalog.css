@@ -904,3 +904,23 @@ input[type=range]::-webkit-slider-thumb {
 @media (max-width: 540px) {
   #cart-drawer { width: 100vw; border-left: none; }
 }
+
+/* ─── CART TOAST ─────────────────────────────────────────────────── */
+#cart-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 2px;
+  z-index: 20000;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+#cart-toast.show { opacity: 1; }

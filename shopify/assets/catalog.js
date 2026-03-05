@@ -953,41 +953,72 @@ function setCtaVariant(variantUrl) {
   _activeVariantId = vid ? parseInt(vid, 10) : null;
 }
 
+function showCartToast(msg, isError = false) {
+  const el = document.getElementById('cart-toast');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.background = isError ? '#c00' : '#000';
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 3500);
+}
+
 async function addToCart(variantId, quantity = 1) {
-  if (!variantId) return;
+  console.log('[Cart] addToCart variantId =', variantId);
+  if (!variantId) {
+    showCartToast('Variant seçilemedi — lütfen tekrar deneyin.', true);
+    return;
+  }
   const btn = document.getElementById('modal-add-cart');
-  if (btn) { btn.textContent = 'Adding…'; btn.style.pointerEvents = 'none'; }
+  if (btn) { btn.textContent = 'Adding…'; btn.disabled = true; }
   try {
     const res = await fetch('/cart/add.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({ id: variantId, quantity })
     });
-    if (!res.ok) throw new Error('cart/add failed');
+    if (!res.ok) {
+      const body = await res.text();
+      console.error('[Cart] /cart/add.js error', res.status, body);
+      showCartToast('Sepete eklenemedi (' + res.status + ')', true);
+      return;
+    }
     await refreshCart();
     openCartDrawer();
   } catch(e) {
-    console.error('addToCart:', e);
+    console.error('[Cart] addToCart fetch error:', e);
+    showCartToast('Bağlantı hatası — Shopify\'da mısınız?', true);
   } finally {
-    if (btn) { btn.textContent = 'Add to Cart'; btn.style.pointerEvents = ''; }
+    if (btn) { btn.textContent = 'Add to Cart'; btn.disabled = false; }
   }
 }
 
 async function buyNow(variantId, quantity = 1) {
-  if (!variantId) return;
+  console.log('[Cart] buyNow variantId =', variantId);
+  if (!variantId) {
+    showCartToast('Variant seçilemedi — lütfen tekrar deneyin.', true);
+    return;
+  }
   const btn = document.getElementById('modal-buy-now');
-  if (btn) { btn.textContent = 'Processing…'; btn.style.pointerEvents = 'none'; }
+  if (btn) { btn.textContent = 'Processing…'; btn.disabled = true; }
   try {
     const res = await fetch('/cart/add.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({ id: variantId, quantity })
     });
-    if (!res.ok) throw new Error('cart/add failed');
+    if (!res.ok) {
+      const body = await res.text();
+      console.error('[Cart] /cart/add.js (buyNow) error', res.status, body);
+      showCartToast('İşlem başarısız (' + res.status + ')', true);
+      if (btn) { btn.textContent = 'Buy Now →'; btn.disabled = false; }
+      return;
+    }
     window.location.href = '/checkout';
   } catch(e) {
-    console.error('buyNow:', e);
-    if (btn) { btn.textContent = 'Buy Now →'; btn.style.pointerEvents = ''; }
+    console.error('[Cart] buyNow fetch error:', e);
+    showCartToast('Bağlantı hatası', true);
+    if (btn) { btn.textContent = 'Buy Now →'; btn.disabled = false; }
   }
 }
 
