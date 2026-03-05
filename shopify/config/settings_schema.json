@@ -1,0 +1,27 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Olivio & Co Catalog",
+    "theme_version": "1.0.0",
+    "theme_author": "Olivio & Co",
+    "theme_documentation_url": "https://olivioandco.eu",
+    "theme_support_url": "https://olivioandco.eu"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Primary color",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background color",
+        "default": "#ffffff"
+      }
+    ]
+  }
+]

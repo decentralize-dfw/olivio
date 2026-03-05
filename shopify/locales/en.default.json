@@ -1,0 +1,20 @@
+{
+  "general": {
+    "loading": "Loading products…",
+    "failed_load": "Failed to load — check network.",
+    "products_count_one": "{{ count }} product",
+    "products_count_other": "{{ count }} products"
+  },
+  "catalog": {
+    "search_placeholder": "Search kids sunglasses, ski goggles…",
+    "filters": "Filters",
+    "reset_filters": "↺ Reset all filters",
+    "size_guide": "Size Guide & FAQ",
+    "add_to_cart": "Add to Cart",
+    "buy_now": "Buy Now →",
+    "you_may_also_like": "You may also like",
+    "rotate": "Rotate",
+    "fit": "Fit",
+    "reset": "↺ Reset"
+  }
+}

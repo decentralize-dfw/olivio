@@ -1,0 +1,54 @@
+<!-- ── Product Detail Modal ──────────────────────── -->
+<div id="modal-overlay" role="dialog" aria-modal="true">
+  <div id="modal-backdrop"></div>
+  <div id="modal">
+    <button id="modal-close" aria-label="Close">✕</button>
+    <div id="modal-body">
+      <div id="modal-left">
+        <div id="modal-main-img-wrap">
+          <img id="modal-main-img" src="" alt="" class="img-cover">
+        </div>
+        <div id="modal-carousel"></div>
+      </div>
+      <div id="modal-right">
+        <!-- Title + price + badges -->
+        <div class="modal-sec">
+          <div id="modal-title"></div>
+          <div class="product-badges" id="modal-badges"></div>
+          <div id="modal-price" style="margin-top:6px"></div>
+        </div>
+        <!-- Color swatches (image-based) -->
+        <div class="modal-sec" id="color-section">
+          <div class="color-lbl">Colors</div>
+          <div id="color-selector"></div>
+        </div>
+        <!-- Lens selector -->
+        <div class="modal-sec" id="lens-section" style="display:none">
+          <div class="lens-lbl">Lens</div>
+          <div id="lens-selector"></div>
+        </div>
+        <!-- Meta info -->
+        <div class="modal-sec" id="meta-section">
+          <div class="info-group" id="modal-meta"></div>
+        </div>
+        <!-- Tabs: Description / Materials / Dimensions / Shipping -->
+        <div class="modal-sec" id="tabs-section" style="padding:0; border-bottom:1px solid #eee;">
+          <div id="tab-bar"></div>
+          <div id="tab-content"></div>
+        </div>
+        <!-- Recommendations -->
+        <div class="modal-sec" id="reco-section" style="display:none">
+          <div class="reco-lbl">You may also like</div>
+          <div id="reco-scroll"></div>
+        </div>
+        <!-- CTA Buttons -->
+        <div class="modal-sec">
+          <div class="modal-cta-row">
+            <a id="modal-add-cart" href="#" target="_blank" rel="noopener" class="btn-add-cart">Add to Cart</a>
+            <a id="modal-buy-now" href="#" target="_blank" rel="noopener" class="btn-buy-now">Buy Now →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

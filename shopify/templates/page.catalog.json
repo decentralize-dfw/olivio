@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "main": {
+      "type": "catalog-3d-viewer",
+      "settings": {
+        "database_url": "https://decentralize-dfw.github.io/olivio/olivio_database_v4.json",
+        "show_welcome_popup": true
+      }
+    }
+  },
+  "order": ["main"]
+}

@@ -1,0 +1,178 @@
+<!-- SEO: Accessible H1 (screen-reader + crawlers) -->
+<h1 class="sr-only">Kids Sunglasses &amp; UV400 Eyewear — Buy Toddler, Junior &amp; Teen Sunglasses | Olivio&amp;Co</h1>
+
+{% render 'catalog-welcome-popup' %}
+
+<!-- Loader -->
+<div id="loader">
+  <div id="loader-title">Olivio &amp; Co</div>
+  <div id="loader-sub">Loading products…</div>
+</div>
+
+<!-- ── Top UI ──────────────────────────────────────── -->
+<div id="ui-top">
+
+  <!-- Desktop single nav bar -->
+  <div class="menu-bar" id="desktop-nav">
+    <a href="{{ routes.root_url }}" class="nav-logo-img" title="Olivio&amp;Co — Home">
+      <img src="//olivioandco.eu/cdn/shop/files/OLIVIO_CO_logo_fb1da4ab-6722-4685-a6ab-c7b01dd588a7.png?v=1713417602&width=130" alt="Olivio&amp;Co">
+    </a>
+    <div class="menu-sep"></div>
+    <button class="nav-btn active" data-type="view"  data-val="grid">Grid</button>
+    <button class="nav-btn"        data-type="view"  data-val="sphere">Sphere</button>
+    <button class="nav-btn"        data-type="view"  data-val="flat">Flat</button>
+    <button class="nav-btn"        data-type="view"  data-val="flow">Flow</button>
+    <div class="menu-sep"></div>
+    <button class="nav-btn active" data-type="group" data-val="all">All</button>
+    <button class="nav-btn"        data-type="group" data-val="age">Age</button>
+    <button class="nav-btn"        data-type="group" data-val="shape">Shape</button>
+    <button class="nav-btn"        data-type="group" data-val="type">Type</button>
+    <button class="nav-btn"        data-type="group" data-val="lens">Lens</button>
+    <div class="menu-sep"></div>
+    <a href="/pages/about" class="nav-btn" style="text-decoration:none;">About</a>
+    <a href="/blogs/news"  class="nav-btn" style="text-decoration:none;">Blog</a>
+  </div>
+
+  <!-- Mobile row 1: view modes -->
+  <div class="menu-bar" id="mobile-view-bar">
+    <a href="{{ routes.root_url }}" class="nav-logo-img" title="Olivio&amp;Co">
+      <img src="//olivioandco.eu/cdn/shop/files/OLIVIO_CO_logo_fb1da4ab-6722-4685-a6ab-c7b01dd588a7.png?v=1713417602&width=130" alt="Olivio&amp;Co">
+    </a>
+    <div class="menu-sep"></div>
+    <button class="nav-btn active" data-type="view" data-val="grid">Grid</button>
+    <button class="nav-btn"        data-type="view" data-val="sphere">Sphere</button>
+    <button class="nav-btn"        data-type="view" data-val="flat">Flat</button>
+    <button class="nav-btn"        data-type="view" data-val="flow">Flow</button>
+    <div class="menu-sep"></div>
+    <a href="/pages/about" class="nav-btn" style="text-decoration:none;">About</a>
+    <a href="/blogs/news"  class="nav-btn" style="text-decoration:none;">Blog</a>
+  </div>
+
+  <!-- Mobile row 2: group -->
+  <div class="menu-bar" id="mobile-group-bar">
+    <button class="nav-btn active" data-type="group" data-val="all">All</button>
+    <button class="nav-btn"        data-type="group" data-val="age">Age</button>
+    <button class="nav-btn"        data-type="group" data-val="shape">Shape</button>
+    <button class="nav-btn"        data-type="group" data-val="type">Type</button>
+    <button class="nav-btn"        data-type="group" data-val="lens">Lens</button>
+  </div>
+
+  <!-- Hover tooltip (desktop only) -->
+  <div id="hover-tooltip"></div>
+
+  <!-- SEO: Trust signals bar -->
+  <div id="trust-bar" aria-hidden="true">
+    <span>✓ 100% UV400 Protection</span>
+    <span>✓ Free Shipping €69+</span>
+    <span>✓ BPA-Free Frames</span>
+    <span>✓ Baby to Teen Sizing</span>
+    <span>✓ Ships Across Europe</span>
+  </div>
+</div>
+
+<!-- Search + count -->
+<div id="search-wrap">
+  <input id="search-input" type="search" placeholder="Search kids sunglasses, ski goggles…" autocomplete="off" spellcheck="false">
+  <div id="count-badge">— products</div>
+</div>
+
+<!-- ── Flat overlay ────────────────────────────────── -->
+<div id="flat-overlay">
+  <div id="flat-content"></div>
+  <footer id="flat-footer">
+    <a href="{{ routes.root_url }}">Home</a><span class="ft-sep">·</span>
+    <a href="/pages/about">About</a><span class="ft-sep">·</span>
+    <a href="/blogs/news">Blog</a><span class="ft-sep">·</span>
+    <a href="https://olivioandco.eu" target="_blank" rel="noopener">olivioandco.eu ↗</a>
+  </footer>
+</div>
+
+<!-- ── Bottom-left: Filters + Controls ────────────── -->
+<div id="bl-container">
+
+  <!-- Filter wrap -->
+  <div id="filter-wrap">
+    <button id="filter-toggle-btn">
+      <span>Filters</span>
+      <span id="filter-arrow">▾</span>
+    </button>
+
+    {% render 'catalog-filters' %}
+  </div><!-- /filter-wrap -->
+
+  <!-- Controls -->
+  <div id="controls">
+    <button id="rotate-reset-btn">↺ Reset</button>
+    <span id="ctrl-label">Rotate</span>
+    <input type="range" id="rotate-slider" min="-2" max="2" step="0.1" value="0">
+    <button id="fit-btn">Fit</button>
+  </div>
+
+</div><!-- /bl-container -->
+
+<!-- ── 3D canvas ───────────────────────────────────── -->
+<div id="container"></div>
+
+{% render 'catalog-modal' %}
+
+{% render 'catalog-size-guide' %}
+
+<!-- Info panel open/close (non-module script, runs immediately) -->
+<script>
+  (function() {
+    var btn = document.getElementById('info-open-btn');
+    var panel = document.getElementById('info-panel');
+    var closeBtn = document.getElementById('info-panel-close');
+    if (btn && panel && closeBtn) {
+      btn.addEventListener('click', function() { panel.classList.add('open'); });
+      closeBtn.addEventListener('click', function() { panel.classList.remove('open'); });
+      panel.addEventListener('click', function(e) { if (e.target === panel) panel.classList.remove('open'); });
+    }
+  })();
+</script>
+
+<!-- Pass section settings to JS before module loads -->
+<script>
+  window.CATALOG_DB_URL = {{ section.settings.database_url | json }};
+</script>
+
+<!-- Three.js import map — must appear before module scripts -->
+<script type="importmap">
+{
+  "imports": {
+    "three":         "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<!-- Main catalog JS module -->
+<script type="module" src="{{ 'catalog.js' | asset_url }}"></script>
+
+{% schema %}
+{
+  "name": "Catalog 3D Viewer",
+  "tag": "section",
+  "class": "catalog-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "database_url",
+      "label": "Database JSON URL",
+      "default": "https://decentralize-dfw.github.io/olivio/olivio_database_v4.json",
+      "info": "URL of the product database JSON file."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_welcome_popup",
+      "label": "Show welcome popup",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Catalog 3D Viewer"
+    }
+  ]
+}
+{% endschema %}
