@@ -1,0 +1,81 @@
+{% comment %}
+  Catalog Navigation Section — Top navigation bar with view/group modes,
+  logo, and links for desktop and mobile layouts.
+{% endcomment %}
+
+<!-- SEO: Accessible H1 (screen-reader + crawlers) -->
+<h1 class="sr-only">{{ page_title | default: 'Kids Sunglasses & UV400 Eyewear — Buy Toddler, Junior & Teen Sunglasses' }} | {{ shop.name | default: 'Olivio&Co' }}</h1>
+
+<!-- ── Top UI ──────────────────────────────────────── -->
+<div id="ui-top">
+
+  <!-- Desktop single nav bar -->
+  <div class="menu-bar" id="desktop-nav">
+    <a href="{{ shop.url | default: '/' }}" class="nav-logo-img" title="{{ shop.name | default: 'Olivio&Co' }} — Home">
+      <img src="{{ 'logo.png' | asset_url | default: '//olivioandco.eu/cdn/shop/files/OLIVIO_CO_logo_fb1da4ab-6722-4685-a6ab-c7b01dd588a7.png?v=1713417602&width=130' }}" alt="{{ shop.name | default: 'Olivio&Co' }}">
+    </a>
+    <div class="menu-sep"></div>
+    <button class="nav-btn active" data-type="view"  data-val="grid">{{ 'catalog.nav.grid' | t | default: 'Grid' }}</button>
+    <button class="nav-btn"        data-type="view"  data-val="sphere">{{ 'catalog.nav.sphere' | t | default: 'Sphere' }}</button>
+    <button class="nav-btn"        data-type="view"  data-val="flat">{{ 'catalog.nav.flat' | t | default: 'Flat' }}</button>
+    <button class="nav-btn"        data-type="view"  data-val="flow">{{ 'catalog.nav.flow' | t | default: 'Flow' }}</button>
+    <div class="menu-sep"></div>
+    <button class="nav-btn active" data-type="group" data-val="all">{{ 'catalog.nav.all' | t | default: 'All' }}</button>
+    <button class="nav-btn"        data-type="group" data-val="age">{{ 'catalog.nav.age' | t | default: 'Age' }}</button>
+    <button class="nav-btn"        data-type="group" data-val="shape">{{ 'catalog.nav.shape' | t | default: 'Shape' }}</button>
+    <button class="nav-btn"        data-type="group" data-val="type">{{ 'catalog.nav.type' | t | default: 'Type' }}</button>
+    <button class="nav-btn"        data-type="group" data-val="lens">{{ 'catalog.nav.lens' | t | default: 'Lens' }}</button>
+    <div class="menu-sep"></div>
+    <a href="{{ pages['about'].url | default: '/pages/about' }}" class="nav-btn" style="text-decoration:none;">{{ 'catalog.nav.about' | t | default: 'About' }}</a>
+    <a href="{{ blogs['news'].url | default: '/blogs/news' }}" class="nav-btn" style="text-decoration:none;">{{ 'catalog.nav.blog' | t | default: 'Blog' }}</a>
+  </div>
+
+  <!-- Mobile row 1: view modes -->
+  <div class="menu-bar" id="mobile-view-bar">
+    <a href="{{ shop.url | default: '/' }}" class="nav-logo-img" title="{{ shop.name | default: 'Olivio&Co' }}">
+      <img src="{{ 'logo.png' | asset_url | default: '//olivioandco.eu/cdn/shop/files/OLIVIO_CO_logo_fb1da4ab-6722-4685-a6ab-c7b01dd588a7.png?v=1713417602&width=130' }}" alt="{{ shop.name | default: 'Olivio&Co' }}">
+    </a>
+    <div class="menu-sep"></div>
+    <button class="nav-btn active" data-type="view" data-val="grid">{{ 'catalog.nav.grid' | t | default: 'Grid' }}</button>
+    <button class="nav-btn"        data-type="view" data-val="sphere">{{ 'catalog.nav.sphere' | t | default: 'Sphere' }}</button>
+    <button class="nav-btn"        data-type="view" data-val="flat">{{ 'catalog.nav.flat' | t | default: 'Flat' }}</button>
+    <button class="nav-btn"        data-type="view" data-val="flow">{{ 'catalog.nav.flow' | t | default: 'Flow' }}</button>
+    <div class="menu-sep"></div>
+    <a href="{{ pages['about'].url | default: '/pages/about' }}" class="nav-btn" style="text-decoration:none;">{{ 'catalog.nav.about' | t | default: 'About' }}</a>
+    <a href="{{ blogs['news'].url | default: '/blogs/news' }}" class="nav-btn" style="text-decoration:none;">{{ 'catalog.nav.blog' | t | default: 'Blog' }}</a>
+  </div>
+
+  <!-- Mobile row 2: group -->
+  <div class="menu-bar" id="mobile-group-bar">
+    <button class="nav-btn active" data-type="group" data-val="all">{{ 'catalog.nav.all' | t | default: 'All' }}</button>
+    <button class="nav-btn"        data-type="group" data-val="age">{{ 'catalog.nav.age' | t | default: 'Age' }}</button>
+    <button class="nav-btn"        data-type="group" data-val="shape">{{ 'catalog.nav.shape' | t | default: 'Shape' }}</button>
+    <button class="nav-btn"        data-type="group" data-val="type">{{ 'catalog.nav.type' | t | default: 'Type' }}</button>
+    <button class="nav-btn"        data-type="group" data-val="lens">{{ 'catalog.nav.lens' | t | default: 'Lens' }}</button>
+  </div>
+
+  <!-- Hover tooltip (desktop only) -->
+  <div id="hover-tooltip"></div>
+
+  <!-- SEO: Trust signals bar -->
+  {% render 'catalog-trust-bar' %}
+</div>
+
+<!-- Search + count -->
+<div id="search-wrap">
+  <input id="search-input" type="search" placeholder="{{ 'catalog.search.placeholder' | t | default: 'Search kids sunglasses, ski goggles…' }}" autocomplete="off" spellcheck="false">
+  <div id="count-badge">— {{ 'catalog.search.products' | t | default: 'products' }}</div>
+</div>
+
+{% schema %}
+{
+  "name": "Catalog Navigation",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    }
+  ]
+}
+{% endschema %}

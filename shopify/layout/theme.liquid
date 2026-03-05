@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code | default: 'en' }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+  <title>{{ page_title }} | {{ shop.name }}</title>
+
+  <!-- SEO: Primary Meta Tags -->
+  <meta name="description" content="{{ page_description | default: 'Buy kids sunglasses with 100% UV400 protection. Toddler, Junior & Teen eyewear — polarised lenses, ski goggles & screen glasses. Free EU shipping over €69. Shop Olivio&Co.' }}">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="author" content="{{ shop.name }}">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="{{ request.locale.iso_code | default: 'en' }}">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="{{ shop.name }}">
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- SEO: Canonical & Alternate Languages -->
+  <link rel="canonical" href="{{ canonical_url }}">
+  <link rel="alternate" hreflang="x-default" href="{{ canonical_url }}">
+  <link rel="alternate" hreflang="en" href="{{ canonical_url }}">
+  <link rel="alternate" hreflang="fr" href="{{ canonical_url | replace: '/products/', '/fr/products/' }}">
+
+  <!-- SEO: Favicon & Brand Assets -->
+  <link rel="icon" type="image/png" href="{{ 'favicon.png' | asset_url | default: '//olivioandco.eu/cdn/shop/files/1654081682-favicon-_2.png?crop=center&height=32&v=1692099300&width=32' }}">
+  <link rel="apple-touch-icon" href="{{ 'favicon.png' | asset_url | default: '//olivioandco.eu/cdn/shop/files/1654081682-favicon-_2.png?crop=center&height=180&v=1692099300&width=180' }}">
+
+  <!-- SEO: Open Graph (Social Sharing) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:title" content="{{ page_title }} | {{ shop.name }}">
+  <meta property="og:description" content="{{ page_description | default: 'Shop toddler, junior & teen sunglasses with 100% UV400 protection. Polarised lenses, ski goggles & screen glasses. Free EU shipping over €69.' }}">
+  <meta property="og:image" content="{{ 'catalog-og-image.jpg' | asset_url | default: 'https://olivioandco.eu/cdn/shop/files/catalog-og-image.jpg?width=1200&height=630' }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="{{ shop.name }}">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="fr_FR">
+
+  <!-- SEO: Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page_title }} | {{ shop.name }}">
+  <meta name="twitter:description" content="{{ page_description | default: 'Buy kids sunglasses, ski goggles & screen glasses with UV400 protection. Toddler to teen. Free EU shipping over €69.' }}">
+  <meta name="twitter:image" content="{{ 'catalog-og-image.jpg' | asset_url | default: 'https://olivioandco.eu/cdn/shop/files/catalog-og-image.jpg?width=1200&height=630' }}">
+
+  <!-- SEO: Performance — DNS prefetch & preconnect -->
+  <link rel="dns-prefetch" href="https://cdn.shopify.com">
+  <link rel="dns-prefetch" href="https://olivioandco.eu">
+  <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+
+  <!-- SEO: Structured Data -->
+  {% render 'catalog-seo-schemas' %}
+
+  <!-- Shopify required header content -->
+  {{ content_for_header }}
+
+  <!-- Theme CSS -->
+  {{ 'catalog.css' | asset_url | stylesheet_tag }}
+
+  <script>
+    const THUMBNAIL_WIDTH = 200;
+    const IMAGE_WIDTH     = 1200;
+  </script>
+</head>
+<body>
+
+  {{ content_for_layout }}
+
+</body>
+</html>

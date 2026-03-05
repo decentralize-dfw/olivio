@@ -1,0 +1,136 @@
+{% comment %}
+  SEO: Structured Data (Schema.org) for the product catalog page.
+  Includes CollectionPage, Organization, WebSite, ItemList, and FAQPage schemas.
+{% endcomment %}
+
+<!-- SEO: Structured Data (Schema.org CollectionPage) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Luxury Sunglasses & Eyewear Catalog",
+  "description": "Interactive 3D product catalog featuring premium sunglasses and eyewear with detailed specifications, real-time filters, and polarised lens options.",
+  "url": "{{ canonical_url | default: 'https://olivioandco.eu/products/catalog' }}",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "{{ shop.name | default: 'Olivio&Co Store' }}",
+    "url": "{{ shop.url | default: 'https://olivioandco.eu' }}"
+  },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home",     "item": "{{ shop.url | default: 'https://olivioandco.eu' }}" },
+      { "@type": "ListItem", "position": 2, "name": "Products", "item": "{{ shop.url | default: 'https://olivioandco.eu' }}/collections/all-sunglasses" },
+      { "@type": "ListItem", "position": 3, "name": "Catalog",  "item": "{{ canonical_url | default: 'https://olivioandco.eu/products/catalog' }}" }
+    ]
+  }
+}
+</script>
+
+<!-- SEO: Organization Schema — brand trust + logo + contact -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "{{ shop.name | default: 'Olivio & Co' }}",
+  "url": "{{ shop.url | default: 'https://olivioandco.eu' }}",
+  "logo": "{{ 'OLIVIO_CO_logo.png' | asset_url | default: 'https://olivioandco.eu/cdn/shop/files/OLIVIO_CO_logo.png' }}",
+  "sameAs": [
+    "https://www.instagram.com/olivioandco",
+    "https://www.facebook.com/olivioandco"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+33189708198",
+    "email": "e_service_eu@olivioandco.com",
+    "contactType": "customer service",
+    "availableLanguage": ["English", "French"]
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "231 rue Saint-Honoré",
+    "addressLocality": "Paris",
+    "addressCountry": "FR"
+  }
+}
+</script>
+
+<!-- SEO: WebSite + SearchAction Schema — Sitelinks Search Box -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "{{ shop.name | default: 'Olivio & Co' }}",
+  "url": "{{ shop.url | default: 'https://olivioandco.eu' }}",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "{{ shop.url | default: 'https://olivioandco.eu' }}/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+<!-- SEO: ItemList Schema — catalog overview for Google -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Kids Sunglasses & Eyewear Catalog — {{ shop.name | default: 'Olivio & Co' }}",
+  "description": "Premium UV400 sunglasses for children — toddler, kids, junior and teen eyewear including polarised lenses, ski goggles and screen glasses.",
+  "url": "{{ canonical_url | default: 'https://olivioandco.eu/products/catalog' }}",
+  "numberOfItems": 155
+}
+</script>
+
+<!-- SEO: FAQPage Schema — rich snippets in Google search results -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What age do kids need sunglasses?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Children need UV400 sunglasses from birth. Olivio & Co covers every age: Baby (0–12m), Toddler (1–3y), Kids (3–6y), Junior (6–10y), Junior+ (10–12y), Teen & Adult (12+). Children's eyes transmit 70% more UV radiation than adult eyes, making protection essential."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do Olivio & Co sunglasses have UV400 protection?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. All Olivio & Co sunglasses, sport sunglasses and ski goggles provide 100% UV400 protection, blocking all UVA and UVB radiation. Frames are BPA-free and designed for active children."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What size sunglasses does my child need?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Baby (0–12m): head 40–44 cm | Toddler (1–3y): 44–48 cm | Kids (3–6y): 48–51 cm | Junior (6–10y): 51–54 cm | Junior+ (10–12y): 54–56 cm | Teen & Adult (12+): 56+ cm. Measure around the widest part of the head above the ears."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the free shipping threshold?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Free shipping on all orders over €69, delivered across Europe. Orders ship within 1–2 business days from Paris, France."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do kids need ski goggles for the slopes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. UV radiation is up to 40% stronger at altitude and reflected snow multiplies exposure further. Olivio & Co junior ski goggles provide 100% UV400 protection with anti-fog lenses and full-face wind coverage — the only kids eyewear brand offering a dedicated ski goggle range."
+      }
+    }
+  ]
+}
+</script>
