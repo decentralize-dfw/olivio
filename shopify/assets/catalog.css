@@ -706,3 +706,201 @@ input[type=range]::-webkit-slider-thumb {
   #modal-left { flex: none; height: 42%; border-right: none; border-bottom: 1px solid #000; }
   #modal-right { width: 100%; flex: 1; }
 }
+
+/* ─── CART ICON IN NAV ───────────────────────────────────────────── */
+.cart-icon-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+.cart-count-badge {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  background: #000;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+}
+
+/* ─── CART DRAWER ────────────────────────────────────────────────── */
+#cart-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 10000;
+  display: none;
+}
+#cart-drawer-overlay.open { display: block; }
+
+#cart-drawer {
+  position: fixed;
+  top: 0;
+  right: -440px;
+  width: 420px;
+  max-width: 100vw;
+  height: 100vh;
+  background: #fff;
+  z-index: 10001;
+  display: flex;
+  flex-direction: column;
+  border-left: 1.5px solid #000;
+  transition: right 0.28s cubic-bezier(.4,0,.2,1);
+  font-family: inherit;
+}
+#cart-drawer.open { right: 0; }
+
+#cart-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1.5px solid #000;
+  flex-shrink: 0;
+}
+#cart-drawer-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+#cart-drawer-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 8px;
+  line-height: 1;
+}
+
+#cart-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+}
+#cart-empty-msg {
+  font-size: 13px;
+  color: #777;
+  margin: 0;
+}
+
+.cart-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+  position: relative;
+}
+.cart-item-img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border: 1px solid #eee;
+  flex-shrink: 0;
+}
+.cart-item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.cart-item-title {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.cart-item-variant {
+  font-size: 11px;
+  color: #666;
+}
+.cart-item-price {
+  font-size: 12px;
+  font-weight: 600;
+}
+.cart-item-qty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.cart-qty-btn {
+  background: none;
+  border: 1px solid #ccc;
+  width: 22px;
+  height: 22px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cart-qty-btn:hover { background: #f5f5f5; }
+.cart-item-qty span { font-size: 12px; min-width: 16px; text-align: center; }
+.cart-item-remove {
+  position: absolute;
+  top: 12px;
+  right: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: #999;
+  padding: 2px 4px;
+}
+.cart-item-remove:hover { color: #000; }
+
+#cart-drawer-footer {
+  padding: 16px 20px;
+  border-top: 1.5px solid #000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+#cart-subtotal-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+}
+.btn-checkout-drawer {
+  display: block;
+  text-align: center;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  border: 1.5px solid #000;
+}
+.btn-checkout-drawer:hover { background: #222; }
+.btn-viewcart-drawer {
+  display: block;
+  text-align: center;
+  background: #fff;
+  color: #000;
+  text-decoration: none;
+  padding: 10px;
+  font-size: 12px;
+  border: 1.5px solid #000;
+}
+.btn-viewcart-drawer:hover { background: #f5f5f5; }
+
+@media (max-width: 540px) {
+  #cart-drawer { width: 100vw; border-left: none; }
+}

@@ -1,0 +1,22 @@
+<!-- Cart Drawer: slides in from the right -->
+<div id="cart-drawer-overlay"></div>
+
+<div id="cart-drawer" role="dialog" aria-modal="true" aria-label="Shopping cart">
+  <div id="cart-drawer-header">
+    <span id="cart-drawer-title">Your Cart (<span id="cart-drawer-count">0</span>)</span>
+    <button id="cart-drawer-close" aria-label="Close cart">✕</button>
+  </div>
+
+  <div id="cart-items">
+    <p id="cart-empty-msg">Your cart is empty.</p>
+  </div>
+
+  <div id="cart-drawer-footer">
+    <div id="cart-subtotal-row">
+      <span>Subtotal</span>
+      <span id="cart-subtotal">€0.00</span>
+    </div>
+    <a href="/checkout" class="btn-checkout-drawer">Checkout →</a>
+    <a href="/cart" class="btn-viewcart-drawer">View Full Cart</a>
+  </div>
+</div>

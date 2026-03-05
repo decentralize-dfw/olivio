@@ -234,6 +234,7 @@ function init() {
   setupFitButton();
   setupModal();
   setupSearch();
+  setupCart();
 }
 
 // ── Build 3D scene ────────────────────────────────────────────────────
@@ -938,18 +939,175 @@ function setupModal() {
 function openModal(p)  { populateModal(p); document.getElementById('modal-overlay').classList.add('open'); }
 function closeModal()  { document.getElementById('modal-overlay').classList.remove('open'); }
 
-// Sets both CTA buttons: Add to Cart + Buy Now
-function setCtaUrls(variantUrl) {
-  const base = 'https://olivioandco.eu';
-  let cartUrl = variantUrl || '#';
+// ── Shopify Ajax Cart ────────────────────────────────────────────────
+
+let _activeVariantId = null;
+
+function setCtaVariant(variantUrl) {
+  // Extract variant ID from URL (e.g. ?variant=48301797605659)
+  let vid = null;
   try {
-    const u = new URL(variantUrl, base);
-    const vid = u.searchParams.get('variant');
-    if (vid) cartUrl = base + '/cart/add?id=' + vid + '&quantity=1';
+    const u = new URL(variantUrl, 'https://olivioandco.eu');
+    vid = u.searchParams.get('variant');
   } catch(e) {}
-  document.getElementById('modal-add-cart').href = cartUrl;
-  document.getElementById('modal-buy-now').href = variantUrl || '#';
+  _activeVariantId = vid ? parseInt(vid, 10) : null;
 }
+
+async function addToCart(variantId, quantity = 1) {
+  if (!variantId) return;
+  const btn = document.getElementById('modal-add-cart');
+  if (btn) { btn.textContent = 'Adding…'; btn.style.pointerEvents = 'none'; }
+  try {
+    const res = await fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ id: variantId, quantity })
+    });
+    if (!res.ok) throw new Error('cart/add failed');
+    await refreshCart();
+    openCartDrawer();
+  } catch(e) {
+    console.error('addToCart:', e);
+  } finally {
+    if (btn) { btn.textContent = 'Add to Cart'; btn.style.pointerEvents = ''; }
+  }
+}
+
+async function buyNow(variantId, quantity = 1) {
+  if (!variantId) return;
+  const btn = document.getElementById('modal-buy-now');
+  if (btn) { btn.textContent = 'Processing…'; btn.style.pointerEvents = 'none'; }
+  try {
+    const res = await fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ id: variantId, quantity })
+    });
+    if (!res.ok) throw new Error('cart/add failed');
+    window.location.href = '/checkout';
+  } catch(e) {
+    console.error('buyNow:', e);
+    if (btn) { btn.textContent = 'Buy Now →'; btn.style.pointerEvents = ''; }
+  }
+}
+
+async function refreshCart() {
+  try {
+    const res = await fetch('/cart.js', { headers: { 'Accept': 'application/json' } });
+    const cart = await res.json();
+    updateCartCount(cart.item_count);
+    renderCartItems(cart);
+  } catch(e) { console.error('refreshCart:', e); }
+}
+
+function updateCartCount(count) {
+  document.querySelectorAll('#cart-count, .cart-count-badge').forEach(el => {
+    if (count > 0) { el.textContent = count; el.style.display = ''; }
+    else { el.style.display = 'none'; }
+  });
+  const drawerCount = document.getElementById('cart-drawer-count');
+  if (drawerCount) drawerCount.textContent = count;
+}
+
+function renderCartItems(cart) {
+  const container = document.getElementById('cart-items');
+  const emptyMsg  = document.getElementById('cart-empty-msg');
+  const subtotal  = document.getElementById('cart-subtotal');
+  if (!container) return;
+
+  if (!cart.items || cart.items.length === 0) {
+    container.innerHTML = '';
+    if (emptyMsg) { emptyMsg.style.display = ''; container.appendChild(emptyMsg); }
+    if (subtotal) subtotal.textContent = '€0.00';
+    return;
+  }
+  if (emptyMsg) emptyMsg.style.display = 'none';
+
+  container.innerHTML = cart.items.map(item => `
+    <div class="cart-item" data-key="${esc(item.key)}">
+      <img class="cart-item-img" src="${esc(item.featured_image?.url || item.image || '')}" alt="${esc(item.product_title)}">
+      <div class="cart-item-info">
+        <div class="cart-item-title">${esc(item.product_title)}</div>
+        <div class="cart-item-variant">${esc(item.variant_title !== 'Default Title' ? (item.variant_title || '') : '')}</div>
+        <div class="cart-item-price">€${(item.final_line_price / 100).toFixed(2)}</div>
+        <div class="cart-item-qty">
+          <button class="cart-qty-btn" data-action="decrease" data-key="${esc(item.key)}" data-qty="${item.quantity - 1}">−</button>
+          <span>${item.quantity}</span>
+          <button class="cart-qty-btn" data-action="increase" data-key="${esc(item.key)}" data-qty="${item.quantity + 1}">+</button>
+        </div>
+      </div>
+      <button class="cart-item-remove" data-key="${esc(item.key)}" aria-label="Remove">✕</button>
+    </div>
+  `).join('');
+
+  if (subtotal) subtotal.textContent = '€' + (cart.total_price / 100).toFixed(2);
+
+  // Qty + remove buttons
+  container.querySelectorAll('.cart-qty-btn').forEach(btn => {
+    btn.addEventListener('click', () => updateCartItem(btn.dataset.key, parseInt(btn.dataset.qty, 10)));
+  });
+  container.querySelectorAll('.cart-item-remove').forEach(btn => {
+    btn.addEventListener('click', () => updateCartItem(btn.dataset.key, 0));
+  });
+}
+
+async function updateCartItem(key, quantity) {
+  try {
+    await fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: key, quantity })
+    });
+    await refreshCart();
+  } catch(e) { console.error('updateCartItem:', e); }
+}
+
+function openCartDrawer() {
+  document.getElementById('cart-drawer')?.classList.add('open');
+  document.getElementById('cart-drawer-overlay')?.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCartDrawer() {
+  document.getElementById('cart-drawer')?.classList.remove('open');
+  document.getElementById('cart-drawer-overlay')?.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function setupCart() {
+  document.getElementById('cart-drawer-close')?.addEventListener('click', closeCartDrawer);
+  document.getElementById('cart-drawer-overlay')?.addEventListener('click', closeCartDrawer);
+
+  // All cart icon buttons (desktop + mobile)
+  document.querySelectorAll('#cart-icon-btn, [data-cart-open]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await refreshCart();
+      openCartDrawer();
+    });
+  });
+
+  // Modal CTA buttons
+  const addBtn = document.getElementById('modal-add-cart');
+  const buyBtn = document.getElementById('modal-buy-now');
+  if (addBtn) {
+    addBtn.addEventListener('click', e => {
+      e.preventDefault();
+      addToCart(_activeVariantId);
+    });
+  }
+  if (buyBtn) {
+    buyBtn.addEventListener('click', e => {
+      e.preventDefault();
+      buyNow(_activeVariantId);
+    });
+  }
+
+  // Load initial cart count
+  refreshCart();
+}
+
+// Legacy alias kept so buildLensSelector & populateModal still compile
+function setCtaUrls(variantUrl) { setCtaVariant(variantUrl); }
 
 function populateModal(p) {
   _imgs = (p.images || []).filter(Boolean);
@@ -985,9 +1143,11 @@ function populateModal(p) {
   buildTabs(p);
   buildRecommendations(p);
 
-  // Default store URL: first available variant's direct URL
+  // Default CTA: first available variant
   if (!p.isSwitchable) {
     const firstVariant = p.variants?.find(v => v.available !== false) || p.variants?.[0];
+    // Prefer direct numeric Shopify variant ID over URL parsing
+    _activeVariantId = firstVariant?.id ? parseInt(firstVariant.id, 10) : null;
     setCtaUrls(firstVariant?.variant_url || p.url || '#');
   }
   buildCarousel(_imgs);
@@ -1063,7 +1223,8 @@ function buildLensSelector(activeP) {
       if (!v) return;
       // Price
       document.getElementById('modal-price').textContent = '€' + Number(v.price).toFixed(2);
-      // Update CTA buttons with correct ?variant= param
+      // Update active variant for cart API
+      if (v.id) _activeVariantId = parseInt(v.id, 10);
       setCtaUrls(v.variant_url || activeP.url);
       // Per-variant stock badge
       const stockEl = document.querySelector('#modal-meta .val[data-stock]');
