@@ -1,0 +1,88 @@
+{% comment %}
+  Catalog Info Panel Section — Size Guide & FAQ overlay panel.
+  Contains crawlable content for SEO (size guide table + FAQ details elements).
+{% endcomment %}
+
+<!-- SEO: Info button (Size Guide & FAQ trigger) -->
+<button id="info-open-btn" aria-haspopup="dialog" aria-controls="info-panel">{{ 'catalog.info.button' | t | default: 'Size Guide & FAQ' }}</button>
+
+<!-- SEO: Info panel — Size Guide + FAQ (crawlable, user-accessible) -->
+<div id="info-panel" role="dialog" aria-modal="true" aria-label="{{ 'catalog.info.aria_label' | t | default: 'Size Guide and FAQ' }}">
+  <div id="info-panel-inner">
+    <button id="info-panel-close" aria-label="{{ 'catalog.modal.close' | t | default: 'Close' }}">✕</button>
+
+    <h2>{{ 'catalog.info.size_guide_title' | t | default: 'Size Guide: Find the Right Fit' }}</h2>
+    <p style="font-size:12px; color:#666; margin-bottom:10px;">{{ 'catalog.info.size_guide_intro' | t | default: 'Olivio & Co covers every age from Baby to Teen with 6 dedicated size categories — each with UV400 protection.' }}</p>
+    <table>
+      <thead>
+        <tr>
+          <th>{{ 'catalog.info.age_category' | t | default: 'Age Category' }}</th>
+          <th>{{ 'catalog.info.age_range' | t | default: 'Age Range' }}</th>
+          <th>{{ 'catalog.info.head_size' | t | default: 'Head Size (cm)' }}</th>
+          <th>{{ 'catalog.info.eyewear_types' | t | default: 'Eyewear Types' }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Baby</td><td>0 – 12 months</td><td>40–44 cm</td><td>Sunglasses</td></tr>
+        <tr><td>Toddler</td><td>1 – 3 years</td><td>44–48 cm</td><td>Sunglasses, Sport</td></tr>
+        <tr><td>Kids</td><td>3 – 6 years</td><td>48–51 cm</td><td>Sunglasses, Sport, Screen</td></tr>
+        <tr><td>Junior</td><td>6 – 10 years</td><td>51–54 cm</td><td>Sunglasses, Sport, Ski, Screen</td></tr>
+        <tr><td>Junior+</td><td>10 – 12 years</td><td>54–56 cm</td><td>All types</td></tr>
+        <tr><td>Teen &amp; Adult</td><td>12+ years</td><td>56+ cm</td><td>All types</td></tr>
+      </tbody>
+    </table>
+    <p class="info-note">{{ 'catalog.info.measure_note' | t | default: 'Measure around the widest part of the head above the ears. When between sizes, choose the larger category.' }}</p>
+
+    <h2>{{ 'catalog.info.faq_title' | t | default: 'Frequently Asked Questions' }}</h2>
+
+    <details>
+      <summary>{{ 'catalog.info.faq_q1' | t | default: 'Why do children need sunglasses?' }}</summary>
+      <p>{{ 'catalog.info.faq_a1' | t | default: "Children's eyes transmit 70% more UV radiation than adult eyes, making UV400 protection essential from infancy. Cumulative UV exposure in childhood is a leading risk factor for cataracts and macular degeneration later in life. All Olivio & Co sunglasses provide 100% UV400 protection." }}</p>
+    </details>
+
+    <details>
+      <summary>{{ 'catalog.info.faq_q2' | t | default: 'What size sunglasses does my child need?' }}</summary>
+      <p>{{ 'catalog.info.faq_a2' | t | default: "Use the size guide above — measure your child's head circumference and match to the table. Use the Age filter in our catalog to show only products for your child's age group. When in doubt, choose the larger size." }}</p>
+    </details>
+
+    <details>
+      <summary>{{ 'catalog.info.faq_q3' | t | default: 'Do kids really need ski goggles?' }}</summary>
+      <p>{{ 'catalog.info.faq_a3' | t | default: 'Yes — UV radiation is up to 40% stronger at altitude, and snow reflects an additional 80% of UV rays. Olivio & Co is one of the very few kids eyewear brands to offer a dedicated junior ski goggle range, featuring anti-fog lenses, 100% UV400 protection, and full-face wind coverage.' }}</p>
+    </details>
+
+    <details>
+      <summary>{{ 'catalog.info.faq_q4' | t | default: 'What are screen glasses and do children need them?' }}</summary>
+      <p>{{ 'catalog.info.faq_a4' | t | default: 'Screen glasses (blue light filter glasses) reduce exposure to high-energy visible (HEV) blue light emitted by screens. With increased screen time for schoolwork and entertainment, they help reduce digital eye fatigue in children. Olivio & Co screen glasses are lightweight and available from Kids age and above.' }}</p>
+    </details>
+
+    <details>
+      <summary>{{ 'catalog.info.faq_q5' | t | default: 'What is your shipping and returns policy?' }}</summary>
+      <p>{{ 'catalog.info.faq_a5' | t | default: 'Free shipping on all orders over €69, shipped across Europe from Paris, France. Orders dispatch within 1–2 business days. Contact our customer service team at e_service_eu@olivioandco.com or +33 189 708 198 for returns or exchanges.' }}</p>
+    </details>
+
+    <details>
+      <summary>{{ 'catalog.info.faq_q6' | t | default: 'Are Olivio & Co frames BPA-free?' }}</summary>
+      <p>{{ 'catalog.info.faq_a6' | t | default: 'Yes. All Olivio & Co frames are BPA-free and designed for safe daily wear by children of all ages, from Baby to Teen.' }}</p>
+    </details>
+  </div>
+</div>
+
+<script>
+  (function() {
+    var btn = document.getElementById('info-open-btn');
+    var panel = document.getElementById('info-panel');
+    var closeBtn = document.getElementById('info-panel-close');
+    if (btn && panel && closeBtn) {
+      btn.addEventListener('click', function() { panel.classList.add('open'); });
+      closeBtn.addEventListener('click', function() { panel.classList.remove('open'); });
+      panel.addEventListener('click', function(e) { if (e.target === panel) panel.classList.remove('open'); });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Catalog Info Panel",
+  "settings": []
+}
+{% endschema %}

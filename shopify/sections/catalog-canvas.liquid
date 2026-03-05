@@ -1,0 +1,24 @@
+{% comment %}
+  Catalog Canvas Section — 3D Three.js canvas container and flat grid overlay.
+{% endcomment %}
+
+<!-- ── Flat overlay ────────────────────────────────── -->
+<div id="flat-overlay">
+  <div id="flat-content"></div>
+  <footer id="flat-footer">
+    <a href="{{ shop.url | default: '/' }}">{{ 'catalog.footer.home' | t | default: 'Home' }}</a><span class="ft-sep">·</span>
+    <a href="{{ pages['about'].url | default: '/pages/about' }}">{{ 'catalog.footer.about' | t | default: 'About' }}</a><span class="ft-sep">·</span>
+    <a href="{{ blogs['news'].url | default: '/blogs/news' }}">{{ 'catalog.footer.blog' | t | default: 'Blog' }}</a><span class="ft-sep">·</span>
+    <a href="{{ shop.url | default: 'https://olivioandco.eu' }}" target="_blank" rel="noopener">{{ shop.domain | default: 'olivioandco.eu' }} ↗</a>
+  </footer>
+</div>
+
+<!-- ── 3D canvas ───────────────────────────────────── -->
+<div id="container"></div>
+
+{% schema %}
+{
+  "name": "Catalog 3D Canvas",
+  "settings": []
+}
+{% endschema %}

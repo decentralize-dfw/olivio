@@ -1,0 +1,36 @@
+{% comment %}
+  Catalog Page Template — Assembles all sections for the interactive 3D product catalog.
+  Uses fetched external database (olivio_database_v4.json) for product data.
+  
+  To use this template:
+  1. In Shopify Admin, create a new page
+  2. Select "catalog" as the template
+  3. The page will render the full interactive 3D catalog
+{% endcomment %}
+
+{% section 'catalog-welcome' %}
+
+<!-- Loader -->
+<div id="loader">
+  <div id="loader-title">{{ shop.name | default: 'Olivio & Co' }}</div>
+  <div id="loader-sub">{{ 'catalog.loader.loading' | t | default: 'Loading products…' }}</div>
+</div>
+
+{% section 'catalog-navigation' %}
+{% section 'catalog-filters' %}
+{% section 'catalog-canvas' %}
+{% section 'catalog-modal' %}
+{% section 'catalog-info-panel' %}
+
+<!-- Three.js Import Map -->
+<script type="importmap">
+{
+  "imports": {
+    "three":         "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<!-- Catalog Application Script -->
+<script type="module" src="{{ 'catalog.js' | asset_url }}"></script>

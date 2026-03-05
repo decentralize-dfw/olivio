@@ -1,0 +1,53 @@
+{% comment %}
+  Welcome Popup Section — Region selection + newsletter discount popup.
+  Displayed on first visit, stored in localStorage.
+{% endcomment %}
+
+<div id="welcome-overlay">
+  <div id="welcome-box">
+    <button id="welcome-close" aria-label="Close">✕</button>
+
+    <!-- Step 1: Region -->
+    <div class="wp-step active" id="wp-step1">
+      <div class="wp-eyebrow">{{ shop.name | default: 'Olivio&Co' }}</div>
+      <div class="wp-title">{{ 'catalog.welcome.select_region' | t | default: 'Select your region' }}</div>
+      <div class="wp-sub">{{ 'catalog.welcome.region_sub' | t | default: "We'll show you prices and shipping options for your area." }}</div>
+      <div class="wp-regions">
+        <button class="wp-region" data-region="com" type="button">
+          <img src="https://cdn.shopify.com/s/files/1/0804/6411/8043/files/us.png?v=1728910229" alt="US flag">
+          <span>{{ 'catalog.welcome.united_states' | t | default: 'United States' }}</span>
+        </button>
+        <button class="wp-region selected" data-region="eu" type="button">
+          <img src="https://cdn.shopify.com/s/files/1/0804/6411/8043/files/europe.png?v=1728910229" alt="Europe flag">
+          <span>{{ 'catalog.welcome.europe' | t | default: 'Europe' }}</span>
+        </button>
+      </div>
+      <button class="wp-btn" id="wp-continue">{{ 'catalog.welcome.continue' | t | default: 'Continue →' }}</button>
+    </div>
+
+    <!-- Step 2: Discount -->
+    <div class="wp-step" id="wp-step2">
+      <div class="wp-eyebrow">{{ 'catalog.welcome.gift_eyebrow' | t | default: 'Welcome gift' }}</div>
+      <div class="wp-discount-badge">10% OFF</div>
+      <div class="wp-title">{{ 'catalog.welcome.first_order' | t | default: 'Your first order' }}</div>
+      <div class="wp-sub">{{ 'catalog.welcome.discount_sub' | t | default: 'Subscribe to our newsletter and get 10% off your first purchase.' }}</div>
+      <input class="wp-email" type="email" id="wp-email" placeholder="{{ 'catalog.welcome.email_placeholder' | t | default: 'your@email.com' }}" autocomplete="email">
+      <button class="wp-btn" id="wp-claim">{{ 'catalog.welcome.claim' | t | default: 'Claim 10% Off' }}</button>
+      <button class="wp-skip" id="wp-skip">{{ 'catalog.welcome.skip' | t | default: 'No thanks, continue without discount' }}</button>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Catalog Welcome Popup",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_welcome_popup",
+      "label": "Show welcome popup",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
